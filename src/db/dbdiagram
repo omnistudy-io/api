@@ -1,0 +1,235 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  id integer [pk, increment]
+  user_plan_id integer [ref: - user_plans.id]
+  profile_id integer [ref: - user_profiles.id]
+  first_name varchar(150)
+  last_name varchar(150)
+  name varchar(300)
+  username varchar(25)
+  email varchar(100)
+  password varchar(100)
+  phone varchar(15)
+  created_at datetime
+  online bool
+}
+
+Table user_plans {
+  id integer [pk, increment]
+  plan_id integer [ref: - plans.id]
+  stripe_id integer
+  active bool
+  renew_date datetime
+  total_spent double
+}
+
+Table plans {
+  id integer [pk]
+  level integer [pk]
+  name varchar(100)
+  price double
+}
+
+Table user_profiles {
+  id integer [pk, increment]
+  address1 varchar(200)
+  address2 varchar(200)
+  city varchar(200)
+  state varchar(100)
+  country varchar(200)
+  zip varchar(6)
+  school varchar(200)
+  year varchar(100)
+  image_url varchar(1000)
+  bio varchar(1500)
+  birth_month integer
+  birth_date integer
+  birth_year integer
+  age integer
+}
+
+Table courses {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  title varchar(200)
+  subject varchar(10)
+  number varchar(10)
+  professor varchar(150)
+  building varchar(100)
+  room varchar(20)
+  color varchar(10)
+  thumbnail_url varchar(1000)
+  start_date datetime
+  end_date datetime
+}
+
+Table assignments {
+  id integer [pk, increment]
+  course_id integer [ref: > courses.id]
+  title varchar(100)
+  description varchar(1000)
+  progress double
+  created_at datetime
+  due_at datetime
+  actual_points double
+  possible_points double
+  weight double
+}
+
+Table exams {
+  id integer [pk, increment]
+  course_id integer [ref: > courses.id]
+  title varchar(100)
+  description varchar(1000)
+  building varchar(100)
+  room varchar(20)
+  seat varchar(20)
+  date date
+  start_time timestamp
+  end_time timestamp
+  actual_points double
+  possible_points double
+  weight double
+}
+
+Table documents {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  course_id integer [ref: > courses.id]
+  assignment_id integer [ref: > assignments.id]
+  exam_id integer [ref: > exams.id]
+  title varchar(100)
+  ext varchar(10)
+  url varchar(1000)
+  ext_icon_url varchar(1000)
+  is_note bool
+}
+
+Table textbooks {
+  id integer [pk, increment]
+  course_id integer [ref: > courses.id]
+  title varchar(250)
+  title_long varchar(1000)
+  isbn varchar(25)
+  isbn13 varchar(25)
+  publisher varchar(100)
+  pages integer
+  image varchar(1000)
+}
+
+Table textbook_authors {
+  id integer [pk, increment]
+  textbook_id integer [ref: > textbooks.id]
+  author varchar(150)
+}
+
+Table textbook_subjects {
+  id integer [pk, increment]
+  textbook_id integer [ref: > textbooks.id]
+  subject varchar(200)
+}
+
+Table textbook_sections {
+  id integer [pk, increment]
+  textbook_id integer [ref: > textbooks.id]
+  title varchar(150)
+  content_url varchar(1000)
+  section_id integer [ref: > textbook_sections.id]
+}
+
+Table course_events {
+  id integer [pk, increment]
+  course_id integer [ref: > courses.id]
+  title varchar(50)
+  date date
+  start_time timestamp
+  end_time timestamp
+  length double // in minutes
+  type varchar(20) // "one-off" or "repeating"
+}
+
+Table groups {
+  id integer [pk, increment]
+  name varchar(200) [pk]
+  tag_id varchar(100) [pk]
+  thumbnail_url varchar(1000)
+  user_count integer
+  users_online integer
+  post_count integer
+  comment_count integer
+  score integer // user_count + post_count + comment_count
+  created_at datetime
+}
+
+Table group_users {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  group_id integer [ref: > groups.id]
+  joined_at datetime
+  post_count integer
+  comment_count integer
+  founder bool
+  admin bool
+}
+
+Table group_posts {
+  id integer [pk, increment]
+  title varchar(500) [pk]
+  user_id integer [ref: > users.id]
+  group_id integer [ref: > groups.id]
+  content varchar(7500)
+  likes integer
+  dislikes integer
+}
+
+Table group_comments {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  group_id integer [ref: > groups.id]
+  post_id integer [ref: > group_posts.id]
+  parent_id integer [ref: > group_comments.id]
+  content varchar(5000)
+  likes integer
+  dislikes integer
+}
+
+Table user_study_sets {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  title varchar(100)
+  num_questions integer // COUNT(user_study_set_questions)
+  created_at datetime
+}
+
+Table user_study_set_questions {
+  id integer [pk, increment]
+  study_set_id integer [ref: > user_study_sets.id]
+  type varchar(7) // "SHORT", "MCQ", "FITB", "TOF"
+  question varchar(500)
+  answer varchar(100)
+}
+
+Table user_summarizations {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  title varchar(150)
+  content varchar(1000)
+}
+
+Table user_chats {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id]
+  content varchar(2000)
+  created_at datetime
+  user_sent bool
+}
+
+Table user_ai_docs {
+  id integer [pk, increment]
+  user_study_set_id integer [ref: > user_study_sets.id]
+  user_summarization_id integer [ref: > user_summarizations.id]
+  user_chat_id integer [ref: > user_chats.id]
+  document_id integer [ref: > documents.id]
+}
