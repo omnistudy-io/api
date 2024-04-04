@@ -2,9 +2,9 @@ const mysql = require('mysql2/promise');
 
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
-    host: "db",
-    user: "api",
-    password: "api4x",
+    host: "localhost",
+    user: "root",
+    password: "testing4x",
     database: "omnistudy",
     port: "3306",
     waitForConnections: true,

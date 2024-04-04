@@ -1,6 +1,8 @@
+import { UserSchema } from '../schema';
 import { query, QueryResponse } from '../db';
 import { ApiResponse } from '../response';
 import { compare } from "bcrypt";
+import { decode, verify, sign as jwtSign } from "jsonwebtoken";
 
 // Create the controller
 const AuthController = require('express')();
@@ -11,16 +13,29 @@ AuthController.post("/login", async (req, res) => {
 
     // Execute query and get results
     const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}'`);
-    const user = qr.result[0];
+    if(qr.result.length == 0)
+        return res.status(200).json(ApiResponse([], "Login failed", "User not found", 401));
+
+    const user: UserSchema = qr.result[0];
     const passwordHash = user.password;
 
     // Compare the password with the hash
     const result = await compare(password, passwordHash);
     // Send response
-    if(result) 
-        res.status(200).json(ApiResponse([user], "Login successful", qr.message, 200));
-    else
+    if(result) {
+        // Create a token
+        const data = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            name: user.name
+        }
+        const token = jwtSign(data, 'testing');
+        res.status(200).json(ApiResponse([token], "Login successful", qr.message, 200));
+    }
+    else {
         res.status(200).json(ApiResponse([], "Login failed", "", 401));
+    }
 });
 
 // Register a new user - same as UsersController.post("/") [POST /users]
@@ -28,16 +43,22 @@ AuthController.post("/register", async (req, res) => {});
 
 // Validate a user token
 AuthController.get("/validate/:token", async (req, res) => {
+    // Decode the token
     const token = req.params.token;
-    const qr: QueryResponse = await query(`SELECT * FROM users WHERE token = '${token}'`);
-    const user = qr.result[0];
+    const decoded = decode(token);
 
-    console.log("Validating token", token, user);
-
-    if(user) 
-        res.status(200).json(ApiResponse([user], "Token is valid", qr.message, 200));
-    else
+    if(decoded) {
+        const verified = verify(token, 'testing');
+        if(verified) {
+            res.status(200).json(ApiResponse([], "Token is valid", "", 200));
+        }
+        else {
+            res.status(200).json(ApiResponse([], "Token is invalid", "", 401));
+        }
+    }
+    else {
         res.status(200).json(ApiResponse([], "Token is invalid", "", 401));
+    }
 });
 
 export default AuthController;

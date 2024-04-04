@@ -9,7 +9,7 @@
 
 CREATE TABLE users (
   id integer AUTO_INCREMENT,
-  token varchar(100),
+  token varchar(100) NOT NULL DEFAULT UUID(),
   first_name varchar(150),
   last_name varchar(150),
   name varchar(300),
