@@ -1,5 +1,3 @@
-function auth(req, res, next) {
+export default function auth(req, res, next) {
     next();
 }
-
-module.exports = auth;

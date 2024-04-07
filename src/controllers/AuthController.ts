@@ -12,9 +12,9 @@ AuthController.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     // Execute query and get results
-    const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}'`);
+    const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}' or username = '${email}'`);
     if(qr.result.length == 0)
-        return res.status(200).json(ApiResponse([], "Login failed", "User not found", 401));
+        return res.status(200).json(ApiResponse([], "Login failed", "User not found", 404));
 
     const user: UserSchema = qr.result[0];
     const passwordHash = user.password;

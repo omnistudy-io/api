@@ -11,7 +11,19 @@ const UsersController = require('express')();
  * @returns User if successful, error if not
  */
 UsersController.post("/", async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, username, password } = req.body;
+
+    // Check if username or email already exists
+    const emailExists = await UsersModel.existsWithEmail(email);
+    const usernameExists = await UsersModel.existsWithUsername(username);
+    if(emailExists) {
+        res.status(200).json(ApiResponse([], 'email', 'User with that email already exists', 409));
+        return;
+    }
+    else if(usernameExists) {
+        res.status(200).json(ApiResponse([], 'username', 'User with that username already exists', 409));
+        return;
+    }
 
     // Generate a salt for the password
     const saltRounds = 10;
@@ -25,7 +37,7 @@ UsersController.post("/", async (req, res) => {
                 res.status(500).json(ApiResponse([], 'Failed to hash password', err.message, 500));
 
             // Create the user and send the response
-            const response = await UsersModel.create(firstName, lastName, email, hash);
+            const response = await UsersModel.create(firstName, lastName, email, username, hash);
             res.status(response.code).json(response);
         });
     });

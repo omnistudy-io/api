@@ -8,13 +8,10 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cors());
 
-// Add authentication middleware
-const auth = require('./auth');
-app.use(auth);
-
 // Register the controller
-import Controller from "./controllers/Controller";
-app.use('/', Controller);
+import { MainController, ProtectedController } from "./controllers/Controllers";
+app.use('/', MainController);
+app.use('/', ProtectedController);
 
 // Start the server
 app.listen(port, () => {

@@ -33,12 +33,12 @@ export class UsersModel {
      * @param phone (optional) User's phone number
      * @returns IApiResponse containing the new user if successful, or an error message if not
      */
-    static async create(firstName: string, lastName: string, email: string, password: string, phone: string = ''): Promise<IApiResponse> {
+    static async create(firstName: string, lastName: string, email: string, username: string, password: string, phone: string = ''): Promise<IApiResponse> {
         // Create the new user
         const user_sql = `INSERT INTO users (
             token, first_name, last_name, name, email, password, phone, online, username
         ) VALUES (
-            UUID(), '${firstName}', '${lastName}', '${firstName} ${lastName}', '${email}', '${password}', '${phone}', 1, '${email}'
+            UUID(), '${firstName}', '${lastName}', '${firstName} ${lastName}', '${email}', '${password}', '${phone}', 1, '${username}'
         )`;
         let qr = await query(user_sql);
         if(qr.result == null || qr.result.affectedRows == 0) 
@@ -94,4 +94,25 @@ export class UsersModel {
         return ApiResponse([], 'User deleted successfully', '', 200);
     }
     
+    /**
+     * Check if a user exists with the given email
+     * @param email User's email
+     * @returns 
+     */
+    static async existsWithEmail(email: string): Promise<boolean> {
+        const sql = `SELECT * FROM users WHERE email='${email}'`;
+        const qr = await query(sql);
+        return qr.result.length > 0;
+    }
+
+    /**
+     * Check if a user exists with the given username
+     * @param username User's username
+     * @returns 
+     */
+    static async existsWithUsername(username: string): Promise<boolean> {
+        const sql = `SELECT * FROM users WHERE username='${username}'`;
+        const qr = await query(sql);
+        return qr.result.length > 0;
+    }
 }
