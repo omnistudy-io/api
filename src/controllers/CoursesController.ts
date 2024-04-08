@@ -42,14 +42,30 @@ CoursesController.get("/:id/events", async (req, res) => {
  * @returns Course if successful, error if not
  */
 CoursesController.post("/", async (req, res) => {
-    
     // Validate the request body
     const { course, eventDefs } = req.body;
 
     // Create the course
     const result = await CoursesModel.create(course, eventDefs);
     res.status(result.code).send(result);
+});
 
+CoursesController.put("/:id/color", async (req, res) => {
+    // Validate body
+    if(req.body.color == null) 
+        return res.status(400).json(ApiResponse([], 'Color not provided', '', 400));
+
+    const result = await CoursesModel.changeColor(req.params.id, req.body.color);
+    res.status(result.code).send(result);
+});
+
+CoursesController.put("/:id/thumbnail", async (req, res) => {
+    // Validate body
+    if(req.body.thumbnail_url == null) 
+        return res.status(400).json(ApiResponse([], 'Thumbnail URL not provided', '', 400));
+
+    const result = await CoursesModel.changeThumbnail(req.params.id, req.body.thumbnail_url);
+    res.status(result.code).send(result);
 });
 
 

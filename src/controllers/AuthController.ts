@@ -49,15 +49,28 @@ AuthController.get("/validate/:token", async (req, res) => {
 
     if(decoded) {
         const verified = verify(token, 'testing');
+        // Token exists and is verified
         if(verified) {
-            res.status(200).json(ApiResponse([], "Token is valid", "", 200));
+            res.status(200).json({
+                message: "Token is valid",
+                user: decoded,
+                ok: true,
+            });
         }
+        // Token is decoded
         else {
-            res.status(200).json(ApiResponse([], "Token is invalid", "", 401));
+            res.status(401).json({
+                message: "Token is invalid",
+                ok: false,
+            });
         }
     }
+    // Token cannot be decoded as a JWT token
     else {
-        res.status(200).json(ApiResponse([], "Token is invalid", "", 401));
+        res.status(404).json({
+            message: "Token is invalid",
+            ok: false,
+        });
     }
 });
 

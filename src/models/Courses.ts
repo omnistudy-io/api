@@ -86,4 +86,28 @@ export class CoursesModel {
 
         return ApiResponse([], 'Course deleted successfully', '', 200);
     }
+
+    // Change course color
+    static async changeColor(id: number, color: string): Promise<IApiResponse> {
+        const update_sql = `UPDATE courses SET color='${color}' WHERE id=${id}`;
+        let qr = await query(update_sql);
+        if(qr.result == null) 
+            return ApiResponse([], 'Failed to update course color', qr.message, 500);
+        if(qr.result.affectedRows == 0)
+            return ApiResponse([], 'No course found with that id', '', 404);
+
+        return ApiResponse([], 'Course color updated successfully', '', 200);
+    }
+
+    // Change course thumbnail
+    static async changeThumbnail(id: number, thumbnail_url: string): Promise<IApiResponse> {
+        const update_sql = `UPDATE courses SET thumbnail_url='${thumbnail_url}' WHERE id=${id}`;
+        let qr = await query(update_sql);
+        if(qr.result == null) 
+            return ApiResponse([], 'Failed to update course thumbnail', qr.message, 500);
+        if(qr.result.affectedRows == 0)
+            return ApiResponse([], 'No course found with that id', '', 404);
+
+        return ApiResponse([], 'Course thumbnail updated successfully', '', 200);
+    }
 }
