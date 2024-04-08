@@ -1,4 +1,5 @@
 export interface UserSchema {
+    api_key: string;
     id: number;
     first_name: string;
     last_name: string;

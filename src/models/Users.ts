@@ -36,7 +36,7 @@ export class UsersModel {
     static async create(firstName: string, lastName: string, email: string, username: string, password: string, phone: string = ''): Promise<IApiResponse> {
         // Create the new user
         const user_sql = `INSERT INTO users (
-            token, first_name, last_name, name, email, password, phone, online, username
+            api_key, first_name, last_name, name, email, password, phone, online, username
         ) VALUES (
             UUID(), '${firstName}', '${lastName}', '${firstName} ${lastName}', '${email}', '${password}', '${phone}', 1, '${username}'
         )`;
