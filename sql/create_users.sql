@@ -1,3 +1,8 @@
+-- create root user access
+create user 'root'@'%' identified by 'testing';
+grant all on *.* to 'root'@'%' with grant option;
+flush privileges;
+
 -- create user for access from the api
 create user 'api'@'172.%.%.%' identified by 'api4x';
 grant all on *.* to 'api'@'172.%.%.%' with grant option;

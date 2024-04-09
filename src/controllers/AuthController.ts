@@ -14,6 +14,8 @@ AuthController.post("/login", async (req, res) => {
 
     // Execute query and get results
     const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}' or username = '${email}'`);
+    if(qr.result === null || qr.result.length === 0) 
+        return res.status(200).json(ApiResponse([], "Login failed", qr.message, 500));
     if(qr.result.length == 0)
         return res.status(200).json(ApiResponse([], "Login failed", "User not found", 404));
 
@@ -94,7 +96,10 @@ AuthController.get("/validate/:token", async (req, res) => {
     const decoded = decode(token);
 
     if(decoded) {
-        const verified = verify(token, 'testing');
+        let verified = false;
+        try {
+            verified = verify(token, 'testing');
+        } catch(e) {}
         // Token exists and is verified
         if(verified) {
             res.status(200).json({

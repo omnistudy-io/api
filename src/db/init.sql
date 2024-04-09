@@ -7,16 +7,25 @@
 -- Author: Jamison Grudem
 -- Date: 2023-03-20
 
+-- create root user access
+create user 'root'@'%' identified by 'testing';
+grant all on *.* to 'root'@'%' with grant option;
+flush privileges;
+
+-- create database and tables
+CREATE DATABASE omnistudy;
+USE omnistudy;
+
 CREATE TABLE users (
   id integer AUTO_INCREMENT,
-  api_key varchar(100) NOT NULL,
+  api_key varchar(100) NOT NULL DEFAULT (UUID()),
   first_name varchar(150),
   last_name varchar(150),
   name varchar(300),
   username varchar(25) NOT NULL DEFAULT '',
   email varchar(100) NOT NULL,
   password varchar(100),
-  phone varchar(15),
+  phone varchar(25),
   created_at datetime NOT NULL DEFAULT NOW(),
   online bool,
   PRIMARY KEY (id),
@@ -299,4 +308,38 @@ CREATE TABLE user_ai_docs (
   FOREIGN KEY (user_summarization_id) REFERENCES user_summarizations(id),
   FOREIGN KEY (user_chat_id) REFERENCES user_chats(id),
   FOREIGN KEY (document_id) REFERENCES documents(id)
+);
+
+-- Insert plan data
+INSERT INTO plans (
+    id, level, name, price
+) VALUES (
+    1, 1, 'Basic', 0.00
+);
+INSERT INTO plans (
+    id, level, name, price
+) VALUES (
+    2, 2, 'Pro', 9.99
+);
+INSERT INTO plans (
+    id, level, name, price
+) VALUES (
+    3, 3, 'Elite', 19.99
+);
+
+-- Insert default user data
+INSERT INTO users (
+    first_name, last_name, name, username, email, password, phone, online
+) VALUES (
+    'OmniStudy', 'Team', 'OmniStudy Team', 'omnistudy', 'info@omnistudy.io', '$2b$10$9GjTBJ3OSdPKUwNVMkJBF.JQmP1zVCg//UlVJR3oeKAvuu4vlIQeG', '+1 (234) 567-8901', true
+);
+INSERT INTO user_profiles (
+    user_id, address1, address2, city, state, country, zip, school, year, image_url, bio, birth_month, birth_date, birth_year, age
+) VALUES (
+    1, '1234 OmniStudy St', 'Suite 400', 'Anytown', 'MN', 'USA', '12345', 'University of Minnesota - Twin Cities', 'Senior', 'https://www.omnistudy.io/img/omnistudy-logo.png', 'Welcome to OmniStudy!', 1, 1, 2000, 23
+);
+INSERT INTO user_plans (
+    user_id, plan_id, stripe_id, active, start_date, renew_date, total_spent
+) VALUES (
+    1, 1, 1, true, NOW(), NOW(), 0
 );
