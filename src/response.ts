@@ -5,7 +5,6 @@ import {
     ForumPostsRows
 } from "./schema";
 
-
 /**
  * IModelResponse
  * Generic base interface for all model responses. Specific models will extend this interface with their own 'data' object.

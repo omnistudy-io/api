@@ -11,14 +11,40 @@ import { UserPlansModel } from "./UserPlans";
 export class UsersModel {
 
     /**
-     * @summary Get user(s) from the db, optionally by id
-     * @source src/models/Users.ts
-     * 
-     * @param id The user id
-     * @returns IApiResponse containing the user(s) if successful, or an error message if not
+     * Get all users
      */
-    static async get(id: number = null): Promise<IApiResponse> {
-        return await Model.get('users', id);
+    static async getAll() { 
+        const sql = `SELECT * FROM users`;
+        const res = await query(sql);
+        // Query or connection error
+        if(res.result === null) {
+            return { code: 500, message: res.message, users: [] }
+        }
+        // No users found
+        if(res.result.length === 0) {
+            return { code: 404, message: 'No users found', users: [] }
+        }
+        // Success
+        return { code: 200, message: 'Users retrieved', users: res.result }
+    }
+
+    /**
+     * Get a user by id
+     * @param id The user id
+     */
+    static async getById(id: number) {
+        const sql = `SELECT * FROM users WHERE id=${id}`;
+        const res = await query(sql);
+        // Query or connection error
+        if(res.result === null) {
+            return { code: 500, message: res.message, user: null }
+        }
+        // No user found
+        if(res.result.length === 0) {
+            return { code: 404, message: 'User not found', user: null }
+        }
+        // Success
+        return { code: 200, message: 'User retrieved', user: res.result[0] }
     }
 
     /**
@@ -43,7 +69,7 @@ export class UsersModel {
         let qr = await query(user_sql);
         if(qr.result == null || qr.result.affectedRows == 0) 
             return ApiResponse([], 'Failed to create user', qr.message, 500);
-        const user: UserSchema = (await this.get(qr.result.insertId)).rows[0] as UserSchema;
+        const user: UserSchema = (await this.getById(qr.result.insertId)).user as UserSchema;
 
         // Create the user's profile
         const profileRes: IApiResponse = await UserProfilesModel.create(user.id);

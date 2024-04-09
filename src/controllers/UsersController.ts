@@ -1,3 +1,4 @@
+import { UserSchema } from '../schema';
 import { UsersModel } from '../models/Users';
 import { ApiResponse } from '../response';
 import { genSalt, hash } from "bcrypt";
@@ -43,18 +44,33 @@ UsersController.post("/", async (req, res) => {
     });
 });
 
+
 /**
  * GET /
  * @summary Get all users
- * @returns User[] if successful, error if not
  */
 UsersController.get("/", async (req, res) => {
-    const response = await UsersModel.get();
+    const response = await UsersModel.getAll();
     res.status(response.code).json(response);
 });
 
+
+/**
+ * GET /:id
+ * @summary Get a user by id
+ */
 UsersController.get('/:id', async (req, res) => {
-    const response = await UsersModel.get(req.params.id);
+    // Validate parameters
+    if(isNaN(req.params.id)) {
+        res.status(400).json({
+            code: 400,
+            message: 'Invalid id parameter',
+            user: null
+        });
+        return;
+    }
+
+    const response = await UsersModel.getById(req.params.id);
     res.status(response.code).json(response);
 });
 

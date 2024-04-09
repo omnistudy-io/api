@@ -1,6 +1,6 @@
 export interface UserSchema {
-    api_key: string;
     id: number;
+    api_key: string;
     first_name: string;
     last_name: string;
     name: string;

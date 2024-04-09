@@ -10,7 +10,7 @@ export class Model {
             return ApiResponse([], `Failed to retrieve ${tableName}${id ? ` with id ${id}` : ''}`, res.message, 500);
         // Item(s) not found
         if(res.result.length === 0)
-            return ApiResponse([], `${tableName} empty`, res.message, 200);
+            return ApiResponse([], `${tableName} empty`, res.message, 404);
         // Item(s) found
         return ApiResponse(res.result, `${tableName} retrieved${id ? ` with id ${id}` : ''}`, res.message, 200);
     }
