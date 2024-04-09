@@ -16,16 +16,16 @@ export class UsersModel {
     static async getAll() { 
         const sql = `SELECT * FROM users`;
         const res = await query(sql);
+
         // Query or connection error
-        if(res.result === null) {
+        if(res.result === null) 
             return { code: 500, message: res.message, users: [] }
-        }
         // No users found
-        if(res.result.length === 0) {
+        if(res.result.length === 0)
             return { code: 404, message: 'No users found', users: [] }
-        }
+
         // Success
-        return { code: 200, message: 'Users retrieved', users: res.result }
+        return { code: 200, message: 'Users found', users: res.result }
     }
 
     /**
@@ -35,16 +35,35 @@ export class UsersModel {
     static async getById(id: number) {
         const sql = `SELECT * FROM users WHERE id=${id}`;
         const res = await query(sql);
+
         // Query or connection error
-        if(res.result === null) {
+        if(res.result === null) 
             return { code: 500, message: res.message, user: null }
-        }
         // No user found
-        if(res.result.length === 0) {
+        if(res.result.length === 0) 
             return { code: 404, message: 'User not found', user: null }
-        }
+
         // Success
-        return { code: 200, message: 'User retrieved', user: res.result[0] }
+        return { code: 200, message: 'User found', user: res.result[0] }
+    }
+
+    /**
+     * Get a user by username
+     * @param username 
+     */
+    static async getByUsername(username: string) {
+        const sql = `SELECT * FROM users WHERE username='${username}'`;
+        const res = await query(sql);
+        
+        // Query or connection error
+        if(res.result === null) 
+            return { code: 500, message: res.message, user: null }
+        // No user found
+        if(res.result.length === 0) 
+            return { code: 404, message: 'User not found', user: null }
+
+        // Success
+        return { code: 200, message: 'User found', user: res.result[0] }
     }
 
     /**
@@ -77,8 +96,8 @@ export class UsersModel {
         if(!profileRes.ok) {
             // Delete the user row
             const deleteRes = await this.delete(user.id);
-            if(!deleteRes.ok)
-                return ApiResponse([], 'Failed to create user profile and delete user', profileRes.sqlMessage + ' | ' + deleteRes.sqlMessage, 500);
+            if(!deleteRes)
+                return ApiResponse([], 'Failed to create user profile and delete user', profileRes.sqlMessage + ' | ' + deleteRes.message, 500);
 
             return profileRes;
         }
@@ -89,8 +108,8 @@ export class UsersModel {
         if(!planRes.ok) {
             // Delete the user row
             const deleteUserRes = await this.delete(user.id);
-            if(!deleteUserRes.ok)
-                return ApiResponse([], 'Failed to create user plan and delete user', planRes.sqlMessage + ' | ' + deleteUserRes.sqlMessage, 500);
+            if(!deleteUserRes)
+                return ApiResponse([], 'Failed to create user plan and delete user', planRes.sqlMessage + ' | ' + deleteUserRes.message, 500);
 
             // Delete the user profile
             const deleteProfileRes = await UserProfilesModel.delete(user.id);
@@ -110,14 +129,17 @@ export class UsersModel {
      * @param id User id
      * @returns IApiResponse based on the success of the deletion
      */
-    static async delete(id: number): Promise<IApiResponse> {
+    static async delete(id: number) {
         // Delete the user
         const user_sql = `DELETE FROM users WHERE id=${id}`;
+        const user = (await this.getById(id)).user;
         let qr = await query(user_sql);
-        if(qr.result == null || qr.result.affectedRows == 0) 
-            return ApiResponse([], 'Failed to delete user', qr.message, 500);
+        if(qr.result == null) 
+            return { code: 500, message: qr.message, user: {} }
+        if(qr.result.affectedRows == 0)
+            return { code: 404, message: 'User not found', user: {} }
 
-        return ApiResponse([], 'User deleted successfully', '', 200);
+        return { code: 200, message: 'User deleted', user: user };
     }
     
     /**
@@ -140,5 +162,31 @@ export class UsersModel {
         const sql = `SELECT * FROM users WHERE username='${username}'`;
         const qr = await query(sql);
         return qr.result.length > 0;
+    }
+
+    /**
+     * Update user fields
+     * @param id The id of the user
+     * @param data Key-value pairs to update
+     */
+    static async update(id: number, data: object) {
+        // Write each field in the data to sql
+        let sql = `UPDATE users SET `;
+        for(const key in data) {
+            sql += `${key}='${data[key]}', `;
+        }
+        sql = sql.slice(0, -2);
+        sql += ` WHERE id=${id}`;
+
+        // Update the user
+        const res = await query(sql);
+        if(res.result === null) 
+            return { code: 500, message: res.message, user: null }
+        if(res.result.affectedRows === 0)
+            return { code: 404, message: 'User not found', user: null }
+
+        // Success
+        const user = (await this.getById(id)).user;
+        return { code: 200, message: 'User updated', user: user }
     }
 }

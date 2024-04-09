@@ -1,6 +1,7 @@
 // Import controllers
 import AuthController from "./AuthController";
 import UsersController from "./UsersController";
+import UserProfilesController from "./UserProfilesController";
 import CoursesController from "./CoursesController";
 import CourseEventsController from "./CourseEventsController";
 import ForumsController from "./ForumsController";

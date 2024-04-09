@@ -4,6 +4,7 @@ import { query, QueryResponse } from '../db';
 import { ApiResponse } from '../response';
 import { compare, genSalt, hash } from "bcrypt";
 import { decode, verify, sign as jwtSign } from "jsonwebtoken";
+import { AuthModel } from '../models/Auth';
 
 // Create the controller
 const AuthController = require('express')();
@@ -11,6 +12,7 @@ const AuthController = require('express')();
 AuthController.post("/login", async (req, res) => {
     // Parse the request body
     const { email, password } = req.body;
+    console.log(email, password);
 
     // Execute query and get results
     const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}' or username = '${email}'`);
@@ -20,10 +22,12 @@ AuthController.post("/login", async (req, res) => {
         return res.status(200).json(ApiResponse([], "Login failed", "User not found", 404));
 
     const user: UserSchema = qr.result[0];
+    console.log(user);
     const passwordHash = user.password;
 
     // Compare the password with the hash
     const result = await compare(password, passwordHash);
+    console.log(result);
     // Send response
     if(result) {
         // Create a token
@@ -59,34 +63,25 @@ AuthController.post("/register", async (req, res) => {
     }
 
     // Generate a salt for the password
-    const saltRounds = 10;
-    genSalt(saltRounds, async (err, salt) => {
-        // Handle error
-        if(err) 
-            res.status(500).json(ApiResponse([], 'Failed to generate password salt', err.message, 500));
-        // Hash the password given the salt
-        hash(password, salt, async (err, hash) => {
-            if(err)
-                res.status(500).json(ApiResponse([], 'Failed to hash password', err.message, 500));
+    const hash = await AuthModel.hashPassword(password, 10);
+    if(hash === null) 
+        res.status(500).json(ApiResponse([], 'Failed to hash password', 'Internal server error', 500));
+    // Create the user and send the response
+    const response = await UsersModel.create(firstName, lastName, email, username, hash);
+    const user: UserSchema = response.rows[0];
 
-            // Create the user and send the response
-            const response = await UsersModel.create(firstName, lastName, email, username, hash);
-            const user: UserSchema = response.rows[0];
-
-            // Create a JWT token
-            const data = {
-                id: user.id,
-                email: email,
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                name: `${firstName} ${lastName}`,
-                api_key: user.api_key
-            }
-            const token = jwtSign(data, 'testing');
-            res.status(200).json(ApiResponse([token], "Register successful", response.message, 200));
-        });
-    });
+    // Create a JWT token
+    const data = {
+        id: user.id,
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        name: `${firstName} ${lastName}`,
+        api_key: user.api_key
+    }
+    const token = jwtSign(data, 'testing');
+    res.status(200).json(ApiResponse([token], "Register successful", response.message, 200));
 });
 
 // Validate a user token

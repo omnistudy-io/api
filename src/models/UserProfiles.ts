@@ -4,16 +4,75 @@ import { IApiResponse, ApiResponse } from "../response";
 import { UserProfileSchema } from "../schema";
 
 export class UserProfilesModel {
+
+    static async getById(id: number){
+        const sql = `SELECT * FROM user_profiles WHERE id=${id}`;
+        const res = await query(sql);
+
+        if(res.result === null) 
+            return { code: 500, message: res.message, user_profile: null };
+        if(res.result.length === 0) 
+            return { code: 404, message: 'User profile not found', user_profile: null };
+
+        // Success
+        return { code: 200, message: 'User profile found', user_profile: res.result[0] };
     
-    /**
-     * @summary Get user profile(s) from the db, optionally by id
-     * @source src/models/UserProfiles.ts
-     * 
-     * @param id The user id
-     * @returns 
-     */
-    static async get(id: number = null): Promise<IApiResponse> {
-        return await Model.get('user_profiles', id);
+    };
+
+    static async getByUserId(user_id: number){
+        const sql = `SELECT * FROM user_profiles WHERE user_id=${user_id}`;
+        const res = await query(sql);
+
+        if(res.result === null) 
+            return { code: 500, message: res.message, user_profile: null };
+        if(res.result.length === 0) 
+            return { code: 404, message: `User profile not found for user ${user_id}`, user_profile: null };
+
+        // Success
+        return { code: 200, message: 'User profile found', user_profile: res.result[0] };
+    
+    };
+
+    static async updateById(id: number, data: object) {
+        // Write each field in the data to sql
+        let sql = `UPDATE user_profiles SET `;
+        for(let key in data) {
+            sql += `${key}='${data[key]}', `;
+        }
+        sql = sql.slice(0, -2);
+        sql += ` WHERE id=${id}`;
+
+        // Execute the query
+        const res = await query(sql);
+        if(res.result === null) 
+            return { code: 500, message: res.message, user_profile: null };
+        if(res.result.affectedRows === 0)
+            return { code: 404, message: 'User profile not found', user_profile: null };
+
+        // Success
+        const updated = (await this.getById(id)).user_profile;
+        return { code: 200, message: 'User profile updated', user_profile: updated };
+    }
+
+    static async updateByUserId(user_id: number, data: object) {
+        // Write each field in the data to sql
+        let sql = `UPDATE user_profiles SET `;
+        for(let key in data) {
+            sql += `${key}='${data[key]}', `;
+        }
+        sql = sql.slice(0, -2);
+        sql += ` WHERE user_id=${user_id}`;
+
+        // Execute the query
+        const res = await query(sql);
+        if(res.result === null) 
+            return { code: 500, message: res.message, user_profile: null };
+        if(res.result.affectedRows === 0)
+            return { code: 404, message: 'User profile not found', user_profile: null };
+
+        // Success
+        const updated = (await this.getByUserId(user_id)).user_profile;
+        return { code: 200, message: 'User profile updated', user_profile: updated };
     }
 
     /**
