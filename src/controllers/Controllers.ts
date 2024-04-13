@@ -1,9 +1,8 @@
 // Import controllers
 import AuthController from "./AuthController";
 import UsersController from "./UsersController";
-import UserProfilesController from "./UserProfilesController";
 import CoursesController from "./CoursesController";
-import CourseEventsController from "./CourseEventsController";
+import AssignmentsController from "./AssignmentsController";
 import ForumsController from "./ForumsController";
 import ForumPostsController from "./ForumPostsController";
 
@@ -17,7 +16,7 @@ MainController.use('/auth', AuthController);
 // Register protected sub-controllers
 ProtectedController.use('/users', UsersController);
 ProtectedController.use('/courses', CoursesController);
-ProtectedController.use('/courses', CourseEventsController);
+ProtectedController.use('/assignments', AssignmentsController);
 ProtectedController.use('/forums', ForumsController);
 ProtectedController.use('/forum_posts', ForumPostsController);  
 // Add authentication middleware

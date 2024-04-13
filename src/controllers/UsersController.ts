@@ -6,6 +6,8 @@ import { genSalt, hash } from "bcrypt";
 
 import { UserPlansModel } from '../models/UserPlans';
 import { UserProfilesModel } from '../models/UserProfiles';
+import { CoursesModel } from '../models/Courses';
+import { AssignmentsModel } from '../models/Assignments';
 
 // Create the controller
 const UsersController = require('express')();
@@ -259,6 +261,25 @@ UsersController.put('/:id/plan', async (req, res) => {
 
     // Update plan
     const response = await UserPlansModel.update(req.params.id, req.body);
+    res.status(response.code).json(response);
+});
+
+
+/**
+ * GET /:id/courses
+ * @summary Get all courses for a user
+ * @param id The user id
+ * @returns code: number, message: string, courses: CourseSchema[]
+ */
+UsersController.get('/:id/courses', async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', courses: [] });
+        return;
+    }
+
+    const response = await CoursesModel.getByUserId(id);
     res.status(response.code).json(response);
 });
 

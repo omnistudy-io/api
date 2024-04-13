@@ -17,6 +17,20 @@ export class CoursesModel {
         return await Model.get('courses', id);
     }
 
+    static async getByUserId(userId: number): Promise<{
+        code: number,
+        message: string,
+        courses: CourseSchema[]
+    }> {
+        const sql = `SELECT * FROM courses WHERE user_id=${userId}`;
+        let res = await query(sql);
+        if(res.result == null) 
+            return { code: 500, message: res.message, courses: [] };
+        if(res.result.length == 0) 
+            return { code: 404, message: 'No courses found', courses: [] };
+        return { code: 200, message: 'Courses found', courses: res.result };
+    }
+
     static async create(c: CourseSchema, eventDefs: CourseEventDefinitionSchema[]) {
         // Create the new course
         const course_sql = `INSERT INTO courses (
