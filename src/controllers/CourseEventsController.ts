@@ -12,7 +12,7 @@ const CourseEventsController = require('express')();
  */
 CourseEventsController.get("/events", async (req, res) => {
     // Get the course(s)
-    const result = await CourseEventsModel.get();
+    const result = await CourseEventsModel.getById(0);
     res.status(result.code).send(result);
 });
 
@@ -22,9 +22,9 @@ CourseEventsController.get("/events", async (req, res) => {
  * @param id The course id
  * @returns Course if successful, error if not
  */
-CourseEventsController.get("/:id/events", async (req, res) => {
+CourseEventsController.get("/:id/events", async (req, res) => { 
     // Get the course
-    const result = await CourseEventsModel.get(req.params.id);
+    const result = await CourseEventsModel.getById(req.params.id);
     res.status(result.code).send(result);
 });
 

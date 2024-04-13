@@ -1,6 +1,7 @@
 import { CoursesModel } from '../models/Courses';
 import { ApiResponse } from '../response';
 import { query } from '../db';
+import { CourseEventsModel } from '../models/CourseEvents';
 
 // Create the controller
 const CoursesController = require('express')();
@@ -17,6 +18,7 @@ CoursesController.get("/", async (req, res) => {
     res.status(result.code).send(result);
 });
 
+
 /**
  * GET /:id
  * @summary Get a course by id
@@ -29,12 +31,22 @@ CoursesController.get("/:id", async (req, res) => {
     res.status(result.code).send(result);
 });
 
-CoursesController.get("/:id/events", async (req, res) => {
-    const result = await query("SELECT * FROM course_events WHERE course_id=" + req.params.id);
-    if(result.result == null) 
-        return res.status(404).json(ApiResponse([], 'Course events not found', result.message, 404));
-    res.status(200).json(ApiResponse(result.result, 'Course events found', '', 200));
-});
+
+/**
+ * GET /:id/events
+ * @summary Get all events for a course
+ * @param id The course id
+ * @returns code: number, message: string, course_events: CourseEventSchema[]
+ */
+CoursesController.get("/:id/events", async(req, res) => {
+    const courseId = req.params.id;
+    if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Course ID', course_events: [] });
+
+    const result = await CourseEventsModel.getByCourseId(courseId);
+    res.status(result.code).json(result);
+}); 
+
 
 /**
  * POST /
@@ -50,23 +62,58 @@ CoursesController.post("/", async (req, res) => {
     res.status(result.code).send(result);
 });
 
+
+/**
+ * 
+ */
+CoursesController.delete("/:id", async (req, res) => {
+    const courseId = req.params.id;
+    // Validate parameters
+    if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
+
+    const result = await CoursesModel.delete(courseId);
+    res.status(result.code).send(result);
+});
+
+
+/**
+ * 
+ */
 CoursesController.put("/:id/color", async (req, res) => {
-    // Validate body
-    if(req.body.color == null) 
-        return res.status(400).json(ApiResponse([], 'Color not provided', '', 400));
+    const courseId = req.params.id;
+    const color = req.body.color;
+
+    // Validate parameters
+    if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
+    if(color == null || color == undefined || color == '')
+        return res.status(400).json({ code: 400, message: 'Color not provided', course: null });
 
     const result = await CoursesModel.changeColor(req.params.id, req.body.color);
     res.status(result.code).send(result);
 });
 
+
+/**
+ * 
+ */
 CoursesController.put("/:id/thumbnail", async (req, res) => {
-    // Validate body
-    if(req.body.thumbnail_url == null) 
-        return res.status(400).json(ApiResponse([], 'Thumbnail URL not provided', '', 400));
+    const courseId = req.params.id;
+    const thumbnailUrl = req.body.thumbnail_url;
+    
+    // Course ID must be defined and positive
+    if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
+    // Thumbnail URL must be defined and be a valid URL
+    if(thumbnailUrl == null || thumbnailUrl == undefined || thumbnailUrl == '' || !thumbnailUrl.includes('http'))
+        return res.status(400).json({ code: 400, message: 'Invalid thumbnail URL', course: null });
 
     const result = await CoursesModel.changeThumbnail(req.params.id, req.body.thumbnail_url);
     res.status(result.code).send(result);
 });
 
 
+
+// Export the controller
 export default CoursesController;

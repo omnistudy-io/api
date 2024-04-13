@@ -77,37 +77,60 @@ export class CoursesModel {
      * @param id The course id
      * @returns 
      */
-    static async delete(id: number): Promise<IApiResponse> {
+    static async delete(id: number): 
+    Promise<{
+        code: number,
+        message: string,
+        course: CourseSchema
+    }> {
         // Delete the course
+        const get_sql = `SELECT * FROM courses WHERE id=${id}`;
+        let get_res = await query(get_sql);
         const delete_sql = `DELETE FROM courses WHERE id=${id}`;
-        let qr = await query(delete_sql);
-        if(qr.result == null || qr.result.affectedRows == 0) 
-            return ApiResponse([], 'Failed to delete course', qr.message, 500);
-
-        return ApiResponse([], 'Course deleted successfully', '', 200);
+        let res = await query(delete_sql);
+        if(res.result == null) 
+            return { code: 500, message: res.message, course: null }
+        if(res.result.affectedRows === 0)
+            return { code: 404, message: 'Course not found', course: null };
+        
+        return { code: 200, message: 'Course deleted successfully', course: get_res.result[0] };
     }
 
     // Change course color
-    static async changeColor(id: number, color: string): Promise<IApiResponse> {
+    static async changeColor(id: number, color: string): Promise<{
+        code: number,
+        message: string,
+        course: CourseSchema
+    }> {
         const update_sql = `UPDATE courses SET color='${color}' WHERE id=${id}`;
         let qr = await query(update_sql);
-        if(qr.result == null) 
-            return ApiResponse([], 'Failed to update course color', qr.message, 500);
-        if(qr.result.affectedRows == 0)
-            return ApiResponse([], 'No course found with that id', '', 404);
+        const get_sql = `SELECT * FROM courses WHERE id=${id}`;
+        let get_res = await query(get_sql);
 
-        return ApiResponse([], 'Course color updated successfully', '', 200);
+        if(qr.result == null) 
+            return { code: 500, message: qr.message, course: null };
+        if(qr.result.affectedRows == 0)
+            return { code: 404, message: 'Course not found', course: null };
+
+        return { code: 200, message: 'Course color updated successfully', course: get_res.result[0] };
     }
 
     // Change course thumbnail
-    static async changeThumbnail(id: number, thumbnail_url: string): Promise<IApiResponse> {
+    static async changeThumbnail(id: number, thumbnail_url: string): Promise<{
+        code: number,
+        message: string,
+        course: CourseSchema
+    }> {
         const update_sql = `UPDATE courses SET thumbnail_url='${thumbnail_url}' WHERE id=${id}`;
         let qr = await query(update_sql);
-        if(qr.result == null) 
-            return ApiResponse([], 'Failed to update course thumbnail', qr.message, 500);
-        if(qr.result.affectedRows == 0)
-            return ApiResponse([], 'No course found with that id', '', 404);
+        const get_sql = `SELECT * FROM courses WHERE id=${id}`;
+        let get_res = await query(get_sql);
 
-        return ApiResponse([], 'Course thumbnail updated successfully', '', 200);
+        if(qr.result == null) 
+            return { code: 500, message: qr.message, course: null };
+        if(qr.result.affectedRows == 0)
+            return { code: 404, message: 'Course not found', course: null };
+
+        return { code: 200, message: 'Course thumbnail updated successfully', course: get_res.result[0] };
     }
 }

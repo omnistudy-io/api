@@ -13,7 +13,7 @@ export interface CourseEventDefinitionSchema {
     id: number;
     name: string;
     rule: string;
-    days: string[];
+    days: string[]; // "repeat" or "oneoff"
     date: string;
     startTime: string;
     endTime: string;
