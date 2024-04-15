@@ -44,6 +44,33 @@ export class AssignmentsModel {
         return { code: 200, message: 'Assignments found', assignments: res.result };
     }
 
+
+    /**
+     * Get all assignments for a given user ID
+     * 
+     * @param userId The user id
+     * @returns code: number, message: string, assignments: AssignmentSchema[]
+     */
+    static async getByUserId(userId: number): Promise<{
+        code: number,
+        message: string,
+        assignments: AssignmentSchema[]
+    }> {
+        const sql = `
+            SELECT a.*, c.title as courseTitle
+            FROM users u, courses c, assignments a
+            WHERE u.id=${userId} AND u.id=c.user_id AND c.id=a.course_id
+        `;
+        const res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, assignments: [] };
+        if(res.result.length == 0)
+            return { code: 404, message: 'No assignments found', assignments: [] };
+        // Success
+        return { code: 200, message: 'Assignments found', assignments: res.result };
+    }
+
+
     /**
      * Create a new assignment
      * 

@@ -283,4 +283,23 @@ UsersController.get('/:id/courses', async (req, res) => {
     res.status(response.code).json(response);
 });
 
+
+/**
+ * GET /:id/assignments
+ * @summary Get all assignments for a user
+ * @param id The user id
+ * @returns code: number, message: string, assignments: AssignmentSchema[]
+ */
+UsersController.get("/:id/assignments", async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', assignments: [] });
+        return;
+    }
+
+    const response = await AssignmentsModel.getByUserId(id);
+    res.status(response.code).json(response);
+});
+
 export default UsersController;
