@@ -1,12 +1,16 @@
--- create_tables.sql
 --
--- Create all tables in the MySQL DB
--- This is a rough draft of the schema and will be updated as the project progresses
---    Diagram: https://dbdiagram.io/d/OmniStudy-DB-Model-65f87f81ae072629ce51e8e8
+-- Clear the database and create a new one
 --
--- Author: Jamison Grudem
--- Date: 2023-03-20
+DROP DATABASE IF EXISTS omnistudy;
+CREATE DATABASE omnistudy;
+USE omnistudy;
 
+
+
+--
+-- Create all tables in the database
+-- 
+-- Users table
 CREATE TABLE users (
   id integer AUTO_INCREMENT,
   api_key varchar(100) NOT NULL,
@@ -24,6 +28,7 @@ CREATE TABLE users (
   UNIQUE (email)
 );
 
+-- Plans table
 CREATE TABLE plans (
   id integer,
   level integer,
@@ -33,16 +38,18 @@ CREATE TABLE plans (
   PRIMARY KEY (id, level)
 );
 
+-- Plan features table
 CREATE TABLE plan_features (
     id integer AUTO_INCREMENT,
     plan_id integer,
     description varchar(150),
     tag varchar(50),
-    included boolean
+    included boolean,
     PRIMARY KEY (id),
     FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE
 );
 
+-- User plans table
 CREATE TABLE user_plans (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -58,6 +65,7 @@ CREATE TABLE user_plans (
   FOREIGN KEY (plan_id) REFERENCES plans(id)
 );
 
+-- User profiles table
 CREATE TABLE user_profiles (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -79,6 +87,7 @@ CREATE TABLE user_profiles (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Courses table
 CREATE TABLE courses (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -96,6 +105,7 @@ CREATE TABLE courses (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Assignments table
 CREATE TABLE assignments (
   id integer AUTO_INCREMENT,
   course_id integer,
@@ -111,6 +121,7 @@ CREATE TABLE assignments (
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
+-- Exams table
 CREATE TABLE exams (
   id integer AUTO_INCREMENT,
   course_id integer,
@@ -129,6 +140,7 @@ CREATE TABLE exams (
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
+-- Documents table
 CREATE TABLE documents (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -147,6 +159,7 @@ CREATE TABLE documents (
   FOREIGN KEY (exam_id) REFERENCES exams(id)
 );
 
+-- Textbooks table
 CREATE TABLE textbooks (
   id integer AUTO_INCREMENT,
   course_id integer,
@@ -161,6 +174,7 @@ CREATE TABLE textbooks (
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
+-- Textbook authors table
 CREATE TABLE textbook_authors (
   id integer AUTO_INCREMENT,
   textbook_id integer,
@@ -169,6 +183,7 @@ CREATE TABLE textbook_authors (
   FOREIGN KEY (textbook_id) REFERENCES textbooks(id) ON DELETE CASCADE
 );
 
+-- Textbook subjects
 CREATE TABLE textbook_subjects (
   id integer AUTO_INCREMENT,
   textbook_id integer,
@@ -177,6 +192,7 @@ CREATE TABLE textbook_subjects (
   FOREIGN KEY (textbook_id) REFERENCES textbooks(id) ON DELETE CASCADE
 );
 
+-- Textbook sections
 CREATE TABLE textbook_sections (
   id integer AUTO_INCREMENT,
   textbook_id integer,
@@ -187,6 +203,7 @@ CREATE TABLE textbook_sections (
   FOREIGN KEY (textbook_id) REFERENCES textbooks(id) ON DELETE CASCADE
 );
 
+-- Course events table
 CREATE TABLE course_events (
   id integer AUTO_INCREMENT,
   course_id integer,
@@ -200,6 +217,7 @@ CREATE TABLE course_events (
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
+-- Forums table
 CREATE TABLE forums (
   id integer AUTO_INCREMENT,
   name varchar(200),
@@ -216,6 +234,7 @@ CREATE TABLE forums (
   UNIQUE (tag_id)
 );
 
+-- Forum users table
 CREATE TABLE forum_users (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -230,6 +249,7 @@ CREATE TABLE forum_users (
   FOREIGN KEY (forum_id) REFERENCES forums(id) ON DELETE CASCADE
 );
 
+-- Forum posts table
 CREATE TABLE forum_posts (
   id integer AUTO_INCREMENT,
   title varchar(500),
@@ -243,6 +263,7 @@ CREATE TABLE forum_posts (
   FOREIGN KEY (forum_id) REFERENCES forums(id) ON DELETE CASCADE
 );
 
+-- Forum comments table
 CREATE TABLE forum_comments (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -259,6 +280,7 @@ CREATE TABLE forum_comments (
   FOREIGN KEY (parent_id) REFERENCES forum_comments(id) ON DELETE CASCADE
 );
 
+-- User study sets table
 CREATE TABLE user_study_sets (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -269,6 +291,7 @@ CREATE TABLE user_study_sets (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- User study set questions
 CREATE TABLE user_study_set_questions (
   id integer AUTO_INCREMENT,
   study_set_id integer,
@@ -279,6 +302,7 @@ CREATE TABLE user_study_set_questions (
   FOREIGN KEY (study_set_id) REFERENCES user_study_sets(id) ON DELETE CASCADE
 );
 
+-- User summarizations table
 CREATE TABLE user_summarizations (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -289,6 +313,7 @@ CREATE TABLE user_summarizations (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- User chats table
 CREATE TABLE user_chats (
   id integer AUTO_INCREMENT,
   user_id integer,
@@ -299,6 +324,7 @@ CREATE TABLE user_chats (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- User AI documents table
 CREATE TABLE user_ai_docs (
   id integer AUTO_INCREMENT,
   user_study_set_id integer,
@@ -311,3 +337,41 @@ CREATE TABLE user_ai_docs (
   FOREIGN KEY (user_chat_id) REFERENCES user_chats(id),
   FOREIGN KEY (document_id) REFERENCES documents(id)
 );
+
+
+--
+-- Insert data into the tables
+--
+-- Create the plans and plan features
+insert into plans values (1, 1, 'Free', 0.0, 'Free plan with limited features');
+insert into plan_features values(null, 1, 'Course & Assignment Planning', 'planner', true);
+insert into plan_features values(null, 1, 'Online Note Taker & Transcription', 'notes', true);
+insert into plan_features values(null, 1, 'Question Generation', 'qgen', false);
+insert into plan_features values(null, 1, 'Document Summarization', 'summ', false);
+insert into plans values (2, 2, 'OmniStudy', 9.99, 'Our most popular plan');
+insert into plan_features values(null, 2, 'Course & Assignment Planning', 'planner', true);
+insert into plan_features values(null, 2, 'Online Note Taker & Transcription', 'notes', true);
+insert into plan_features values(null, 2, 'Question Generation', 'qgen', true);
+insert into plan_features values(null, 2, 'Document Summarization', 'summ', false);
+insert into plans values (3, 3, 'Advanced', 19.99, 'Advanced plan with all features');
+insert into plan_features values(null, 3, 'Course & Assignment Planning', 'planner', true);
+insert into plan_features values(null, 3, 'Online Note Taker & Transcription', 'notes', true);
+insert into plan_features values(null, 3, 'Question Generation', 'qgen', true);
+insert into plan_features values(null, 3, 'Document Summarization', 'summ', true);
+-- Create a user
+insert into users values (null, UUID(), 'Dev', 'User', 'Dev User', 'dev', 'dev@localhost', '$2b$10$bqjXk8idtUq/9zCm2IszeOO2qZwQFRFY3u5IxpKcaFjuXIY4.y8i2', '(763) 370-0010', NOW(), false);
+-- Create a user plan
+insert into user_plans values (null, 1, 1, 0, true, NOW(), NOW(), 0);
+-- Create a user profile
+insert into user_profiles values (null, 1, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
+-- Create a course
+insert into courses values (null, 1, 'Web Programming', 'CSCI', '4131', 'Dan Challou', 'Anderson Hall', 'Room 370', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/Challou_Dan_1.jpg', '2024-01-01', '2024-05-01');
+-- Create a couple assignments for that course
+insert into assignments values (null, 1, 'Homework 7', 'Create a website from scratch', 0.0, NOW(), '2024-04-12', 96.0, 100.0, 0.2);
+insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app from scratch', 0.0, NOW(), '2024-04-30', 88.0, 100.0, 0.2);
+-- Create a couple exams for that course
+insert into exams values (null, 1, 'Midterm', 'Midterm exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 1, 'Final', 'Final exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
+
+
+--

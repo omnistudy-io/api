@@ -3,8 +3,7 @@ import AuthController from "./AuthController";
 import UsersController from "./UsersController";
 import CoursesController from "./CoursesController";
 import AssignmentsController from "./AssignmentsController";
-import ForumsController from "./ForumsController";
-import ForumPostsController from "./ForumPostsController";
+import PlansController from "./PlansController";
 
 // Create the main controller
 export const MainController = require('express')();
@@ -16,9 +15,8 @@ MainController.use('/auth', AuthController);
 // Register protected sub-controllers
 ProtectedController.use('/users', UsersController);
 ProtectedController.use('/courses', CoursesController);
-ProtectedController.use('/assignments', AssignmentsController);
-ProtectedController.use('/forums', ForumsController);
-ProtectedController.use('/forum_posts', ForumPostsController);  
+ProtectedController.use('/assignments', AssignmentsController); 
+ProtectedController.use('/plans', PlansController);
 // Add authentication middleware
 import auth from "../auth";
 ProtectedController.use(auth);
