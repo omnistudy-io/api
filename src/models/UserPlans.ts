@@ -25,6 +25,12 @@ export class UserPlansModel {
         return ApiResponse([qr.result], 'User plan created successfully', '', 201);
     }
 
+    /**
+     * Geta 
+     * 
+     * @param userId The id of the user
+     * @returns 
+     */
     static async getByUserId(userId: number) {
         // Get the user's plan
         const sql = `SELECT * FROM user_plans WHERE user_id=${userId}`;
