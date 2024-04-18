@@ -9,9 +9,8 @@ app.use(express.json());
 app.use(cors());
 
 // Register the controller
-import { MainController, ProtectedController } from "./controllers/Controllers";
-app.use('/', MainController);
-app.use('/', ProtectedController);
+import Controller from "./controllers/Controller";
+app.use('/', Controller);
 
 // Start the server
 app.listen(port, () => {

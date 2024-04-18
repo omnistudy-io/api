@@ -35,7 +35,8 @@ AuthController.post("/login", async (req, res) => {
             id: user.id,
             email: user.email,
             username: user.username,
-            name: user.name
+            name: user.name,
+            api_key: user.api_key
         }
         const token = jwtSign(data, 'testing');
         res.status(200).json(ApiResponse([token], "Login successful", qr.message, 200));
@@ -85,39 +86,11 @@ AuthController.post("/register", async (req, res) => {
 });
 
 // Validate a user token
-AuthController.get("/validate/:token", async (req, res) => {
-    // Decode the token
-    const token = req.params.token;
-    const decoded = decode(token);
-
-    if(decoded) {
-        let verified = false;
-        try {
-            verified = verify(token, 'testing');
-        } catch(e) {}
-        // Token exists and is verified
-        if(verified) {
-            res.status(200).json({
-                message: "Token is valid",
-                user: decoded,
-                ok: true,
-            });
-        }
-        // Token is decoded
-        else {
-            res.status(401).json({
-                message: "Token is invalid",
-                ok: false,
-            });
-        }
-    }
-    // Token cannot be decoded as a JWT token
-    else {
-        res.status(404).json({
-            message: "Token is invalid",
-            ok: false,
-        });
-    }
+AuthController.post("/token", async (req, res) => {
+    // Parse token from body
+    const token = req.body.token;
+    const response = await AuthModel.decodeToken(token);
+    res.status(response.code).json(response);
 });
 
 export default AuthController;

@@ -1,5 +1,7 @@
 import { IApiResponse, ApiResponse } from "../response";
 import { compare, genSalt, hash } from "bcrypt";
+import { decode, verify } from "jsonwebtoken";
+import { query } from "../db";
 
 export class AuthModel {
 
@@ -25,4 +27,39 @@ export class AuthModel {
         return promise;
     }
 
+    static async decodeToken(token: string) {
+        // Decode the token
+        const decoded = decode(token);
+
+        if(decoded) {
+            let verified = false;
+            try {
+                verified = verify(token, 'testing');
+            } catch(e) {}
+            // Token exists and is verified
+            if(verified) {
+                return { code: 200, message: "Token is valid", data: decoded };
+            }
+            // Token is decoded but not verified
+            else {
+                return { code: 401, message: "Token is invalid", data: null };
+            }
+        }
+        // Token cannot be decoded as a JWT token
+        else {
+            return { code: 400, message: "Token is invalid", data: null };
+        }
+    }
+
+    static async validateUser(userId: number, apiKey: string) {
+        // Validate the user against the db
+        const user = await query(`SELECT * FROM users WHERE id = ${userId} AND api_key = '${apiKey}'`);
+        if(user.result == null) {
+            return false;
+        }
+        if(user.result.length === 0) {
+            return false;
+        }
+        return true;
+    }
 }

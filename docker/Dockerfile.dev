@@ -8,6 +8,8 @@ WORKDIR /api
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npm uninstall bcrypt
+RUN npm install bcrypt
 
 # Environment variables
 ENV ENVIRONMENT dev
