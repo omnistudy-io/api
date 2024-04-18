@@ -15,6 +15,11 @@ import { AuthModel } from "./models/Auth";
  * @returns code: 401, message: string || next()
  */
 export default async function auth(req, res, next) {
+
+    // Skip authentication in dev environment
+    if(process.env.ENVIRONMENT === "dev")
+        return next();
+
     // Check for the authorization header
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     if(authHeader === undefined || authHeader === null) {
