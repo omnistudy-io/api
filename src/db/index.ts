@@ -1,12 +1,13 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
-    host: "db",
-    user: "root",
-    password: "testing",
-    database: "omnistudy",
-    port: "3306",
+    host: process.env.DB_HOSTNAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DBNAME,
+    port: process.env.DB_PORT,
     waitForConnections: true,
     connectionLimit: 20,
     maxIdle: 20, // max idle connections, the default value is the same as `connectionLimit`
@@ -44,6 +45,12 @@ export async function query(sql): Promise<QueryResponse> {
     catch (err) {
         console.error(err);
         console.log(err.stack);
+
+        console.log("Env vars:");
+        console.log(process.env.DB_HOSTNAME);
+        console.log(process.env.DB_PASSWORD);
+        console.log(process.env.DB_PORT);
+
         return {
             message: "Connection error",
             result: null

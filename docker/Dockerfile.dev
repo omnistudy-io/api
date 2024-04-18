@@ -11,13 +11,14 @@ COPY . .
 
 # Environment variables
 ENV ENVIRONMENT dev
-ENV HOSTNAME http://localhost
+ENV HOSTNAME localhost
 ENV PORT 3001
 ENV JWT_SECRET dev_secret
-ENV DB_HOSTNAME http://localhost
+ENV DB_HOSTNAME db
+ENV DB_USER root
+ENV DB_DBNAME omnistudy
 ENV DB_PORT 3306
-ENV DB_USERNAME omnistudy
-ENV DB_PASSWORD testing
+ENV DB_PASSWORD test
 ENV S3_BUCKET omnistudy
 ENV S3_REGION us-west-2
 
