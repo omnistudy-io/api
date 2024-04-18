@@ -1,0 +1,26 @@
+# Download Node.js image from Docker Hub
+FROM node:latest
+
+# Create directory for container
+WORKDIR /api
+
+# Copy files and install dependencies
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# Environment variables
+ENV ENVIRONMENT dev
+ENV HOSTNAME http://localhost
+ENV PORT 3001
+ENV JWT_SECRET dev_secret
+ENV DB_HOSTNAME http://localhost
+ENV DB_PORT 3306
+ENV DB_USERNAME omnistudy
+ENV DB_PASSWORD testing
+ENV S3_BUCKET omnistudy
+ENV S3_REGION us-west-2
+
+# Expose port and run the app
+EXPOSE 3001
+CMD ["npm", "run", "dev"]
