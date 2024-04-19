@@ -8,6 +8,8 @@ export interface TextbookSchema {
     publisher: string;
     pages: number;
     image: string;
+    created_at: string;
+    temp_content: string;
 }
 
 export interface TextbooksRows extends Array<TextbookSchema> {};
