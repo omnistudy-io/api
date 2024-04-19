@@ -60,5 +60,35 @@ TextbooksController.delete("/:id", async(req, res) => {
     res.status(response.code).json(response);
 });
 
+/**
+ * PUT /:id
+ * @summary Update an textbook by its ID
+ * @param id The textbook ID
+ * @returns code: number, message: string, textbook: TextbookSchema
+ */
+TextbooksController.put("/:id", async(req, res) => {
+    // Validate parameters
+    if(isNaN(req.params.id)) {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', textbook: null });
+        return;
+    }
+
+    // Allowed fields
+    const updatableFields = ["id", "course_id", "title", "title_long", "isbn", "isbn13", "publisher", "pages", "image", "due_at", "processed"];
+    if(Object.keys(req.body).some(key => !updatableFields.includes(key))) {
+        res.status(400).json({ code: 400, message: 'Invalid field in request', textbook: null });
+        return;
+    }
+    // Check that any field exists
+    if(Object.keys(req.body).length == 0) {
+        res.status(400).json({ code: 400, message: 'No fields provided', textbook: null });
+        return;
+    }
+
+    // Update textbook
+    const response = await TextbooksModel.update(req.params.id, req.body);
+    res.status(response.code).json(response);
+});
+
 // Export the controller
 export default TextbooksController;

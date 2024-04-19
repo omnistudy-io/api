@@ -157,6 +157,7 @@ CREATE TABLE textbooks (
   publisher varchar(100),
   pages integer,
   image varchar(1000),
+  processed bool,
   PRIMARY KEY (id),
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );

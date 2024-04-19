@@ -56,10 +56,10 @@ export class TextbooksModel {
      */
     static async create(a: TextbookSchema) {
         const sql = `INSERT INTO textbooks (
-            id, course_id, title, title_long, isbn, isbn13, publisher, pages, image, due_at, temp_content
+            id, course_id, title, title_long, isbn, isbn13, publisher, pages, image, created_at, processed
         ) VALUES (
             '${a.id}','${a.course_id}', '${a.title}', '${a.title_long}','${a.isbn}','${a.isbn13}',
-            '${a.publisher}','${a.pages}','${a.image}', NOW(), '${a.temp_content}'
+            '${a.publisher}','${a.pages}','${a.image}', NOW(), '${a.processed}'
         )`;
 
         let res = await query(sql);
@@ -80,6 +80,37 @@ export class TextbooksModel {
             return { code: 500, message: res.message };
         return { code: 200, message: 'Textbook content uploaded successfully' };
     } 
+
+        /**
+     * Update an textbook by its ID
+     * 
+     * @param id The textbook id
+     * @param data The fields to update
+     * @returns code: number, message: string, textbook: TextbookSchema
+     */
+        static async update(id: number, data: object) {
+            // Write each field in the data to sql
+            let sql = `UPDATE textbooks SET `;
+            for(const key in data) {
+                sql += `${key}='${data[key]}', `;
+            }
+            sql = sql.slice(0, -2);
+            sql += ` WHERE id=${id}`;
+    
+            console.log(sql);
+    
+            // Update the textbook
+            const res = await query(sql);
+            if(res.result === null) 
+                return { code: 500, message: res.message, textbook: null }
+            if(res.result.affectedRows === 0)
+                return { code: 404, message: 'Textbook not found', textbook: null }
+    
+            // Success
+            const textbook = (await this.getById(id)).textbook;
+            return { code: 200, message: 'Textbook updated', textbook: textbook }
+        }
+
 
     /**
      * Delete an textbook by its ID

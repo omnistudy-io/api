@@ -9,7 +9,7 @@ export interface TextbookSchema {
     pages: number;
     image: string;
     created_at: string;
-    temp_content: string;
+    processed: boolean;       //true = uploaded to pinecone
 }
 
 export interface TextbooksRows extends Array<TextbookSchema> {};
