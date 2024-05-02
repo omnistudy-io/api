@@ -12,7 +12,7 @@ export class PlansModel {
     static async getAll(): Promise<{
         code: number,
         message: string,
-        plans: PlanSchema
+        plans: PlanSchema[]
     }> {
         const sql = `SELECT * FROM plans`;
         const res = await query(sql);

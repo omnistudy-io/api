@@ -11,8 +11,14 @@ const PlansController = require('express')();
  * @returns code: number, message: string, plans: PlanSchema
  */
 PlansController.get('/', async (req, res) => {
-    const plans = await PlansModel.getAll();
-    res.status(plans.code).json(plans);
+    const data = await PlansModel.getAll();
+    for(let i = 0; i < data.plans.length; i++) {
+        const plan = data.plans[i];
+        const planFeatures = await PlansModel.getFeatures(plan.id);
+        data.plans[plan.id - 1]['features'] = planFeatures.features;
+    }
+
+    res.status(data.code).json(data);
 });
 
 

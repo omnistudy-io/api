@@ -6,7 +6,6 @@ CREATE DATABASE omnistudy;
 USE omnistudy;
 
 
-
 --
 -- Create all tables in the database
 -- 
