@@ -3,6 +3,7 @@ import AuthController from "./AuthController";
 import UsersController from "./UsersController";
 import CoursesController from "./CoursesController";
 import AssignmentsController from "./AssignmentsController";
+import ExamsController from "./ExamsController";
 import PlansController from "./PlansController";
 
 // Middleware
@@ -18,6 +19,7 @@ Controller.use('/auth', AuthController);
 Controller.use('/users', [auth], UsersController);
 Controller.use('/courses', [auth], CoursesController);
 Controller.use('/assignments', [auth], AssignmentsController); 
+Controller.use('/exams', [auth], ExamsController);
 Controller.use('/plans', [auth], PlansController);
 
 // Unprotected controller functionality
