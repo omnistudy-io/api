@@ -36,7 +36,7 @@ export class ExamsModel {
         exams: ExamSchema[]
     }> {
         const sql = `
-            SELECT a.*, c.title as courseTitle
+            SELECT e.*, c.title as courseTitle
             FROM users u, courses c, exams e
             WHERE c.id=${courseId} AND u.id=c.user_id AND c.id=e.course_id
         `;
@@ -61,7 +61,7 @@ export class ExamsModel {
         exams: ExamSchema[]
     }> {
         const sql = `
-            SELECT a.*, c.title as courseTitle
+            SELECT e.*, c.title as courseTitle
             FROM users u, courses c, exams e
             WHERE u.id=${userId} AND u.id=c.user_id AND c.id=e.course_id
         `;
@@ -69,9 +69,9 @@ export class ExamsModel {
         if(res.result == null)
             return { code: 500, message: res.message, exams: [] };
         if(res.result.length == 0)
-            return { code: 404, message: 'No assignments found', exams: [] };
+            return { code: 404, message: 'No exams found', exams: [] };
         // Success
-        return { code: 200, message: 'Assignments found', exams: res.result };
+        return { code: 200, message: 'Exams found', exams: res.result };
     }
 
 
