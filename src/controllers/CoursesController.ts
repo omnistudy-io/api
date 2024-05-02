@@ -3,6 +3,7 @@ import { ApiResponse } from '../response';
 import { query } from '../db';
 import { CourseEventsModel } from '../models/CourseEvents';
 import { AssignmentsModel } from '../models/Assignments';
+import { ExamsModel } from '../models/Exams';
 
 // Create the controller
 const CoursesController = require('express')();
@@ -130,6 +131,26 @@ CoursesController.get('/:id/assignments', async (req, res) => {
     }
 
     const response = await AssignmentsModel.getByCourseId(id);
+    res.status(response.code).json(response);
+});
+
+
+
+/**
+ * GET /:id/exams
+ * @summary Get all exams for a course
+ * @param id The course id
+ * @returns code: number, message: string, exams: ExamSchema[]
+ */
+CoursesController.get("/:id/exams", async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', exams: [] });
+        return;
+    }
+
+    const response = await ExamsModel.getByCourseId(id);
     res.status(response.code).json(response);
 });
 

@@ -8,6 +8,7 @@ import { UserPlansModel } from '../models/UserPlans';
 import { UserProfilesModel } from '../models/UserProfiles';
 import { CoursesModel } from '../models/Courses';
 import { AssignmentsModel } from '../models/Assignments';
+import { ExamsModel } from '../models/Exams';
 
 // Create the controller
 const UsersController = require('express')();
@@ -302,4 +303,25 @@ UsersController.get("/:id/assignments", async (req, res) => {
     res.status(response.code).json(response);
 });
 
+
+/**
+ * GET /:id/exams
+ * @summary Get all exams for a user
+ * @param id The user id
+ * @returns code: number, message: string, exams: ExamSchema[]
+ */
+UsersController.get("/:id/exams", async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', exams: [] });
+        return;
+    }
+
+    const response = await ExamsModel.getByUserId(id);
+    res.status(response.code).json(response);
+});
+
+
+// Export the controller
 export default UsersController;
