@@ -1,22 +1,54 @@
 import { query } from "../db";
-import { Model } from "./Model";
-import { IApiResponse, ApiResponse } from "../response";
 import { CourseSchema } from "../schema";
 import { CourseEventDefinitionSchema } from "../schema/course_events";
 
 export class CoursesModel {
 
     /**
-     * @summary Get course(s) from the db, optionally by id
-     * @source src/models/Courses.ts
-     * 
-     * @param id The course id
-     * @returns 
+     * Get all courses
+     * @param id The course ID
+     * @returns code: number, message: string, course: CourseSchema
      */
-    static async get(id: number = null): Promise<IApiResponse> {
-        return await Model.get('courses', id);
+    static async getAll(): Promise<{
+        code: number,
+        message: string,
+        courses: CourseSchema[]
+    }> {
+        const sql = `SELECT * FROM courses`;
+        let res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, courses: [] };
+        if(res.result.length == 0) 
+            return { code: 404, message: 'No courses found', courses: [] };
+        return { code: 200, message: 'Courses found', courses: res.result };
     }
 
+    /**
+     * Get a course by its ID
+     * 
+     * @param id The course ID
+     * @returns Course if found, null if not found
+     */
+    static async getById(id: number): Promise<{
+        code: number,
+        message: string,
+        course: CourseSchema
+    }> {
+        const sql = `SELECT * FROM courses WHERE id=${id}`;
+        let res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, course: null };
+        if(res.result.length == 0) 
+            return { code: 404, message: 'Assignment not found', course: null };
+        return { code: 200, message: 'Assignment found', course: res.result[0] };
+    }
+
+    /**
+     * Get all courses for a given user id
+     * 
+     * @param userId The user id
+     * @returns 
+     */
     static async getByUserId(userId: number): Promise<{
         code: number,
         message: string,
@@ -31,7 +63,18 @@ export class CoursesModel {
         return { code: 200, message: 'Courses found', courses: res.result };
     }
 
-    static async create(c: CourseSchema, eventDefs: CourseEventDefinitionSchema[]) {
+    /**
+     * Create a new course
+     * 
+     * @param c The course schema
+     * @param eventDefs The event definitions for the course
+     * @returns 
+     */
+    static async create(c: CourseSchema, eventDefs: CourseEventDefinitionSchema[]): Promise<{
+        code: number,
+        message: string,
+        course: CourseSchema
+    }> {
         // Create the new course
         const course_sql = `INSERT INTO courses (
             user_id, title, subject, number, professor, building, room, color, thumbnail_url, start_date, end_date
@@ -40,8 +83,8 @@ export class CoursesModel {
         )`;
         let qr = await query(course_sql);
         if(qr.result == null || qr.result.affectedRows == 0) 
-            return ApiResponse([], 'Failed to create course', qr.message, 500);
-        const course: CourseSchema = (await this.get(qr.result.insertId)).rows[0] as CourseSchema;
+            return { code: 500, message: qr.message, course: null };
+        const course: CourseSchema = (await this.getById(qr.result.insertId)).course;
 
         // Add all course events based on the course event definition
         eventDefs.forEach(async (eventDef) => {
@@ -61,7 +104,7 @@ export class CoursesModel {
                         )`;
                         let qr = await query(course_event_sql);
                         if(qr.result == null || qr.result.affectedRows == 0) 
-                            return ApiResponse([], 'Failed to create course event', qr.message, 500);
+                            return { code: 500, message: 'Failed to create course event', course: null };
                     }
                     // Increment the current date
                     current.setDate(current.getDate() + 1);
@@ -77,11 +120,11 @@ export class CoursesModel {
                 )`;
                 let qr = await query(course_event_sql);
                 if(qr.result == null || qr.result.affectedRows == 0) 
-                    return ApiResponse([], 'Failed to create course event', qr.message, 500);
+                    return { code: 500, message: 'Failed to create course event', course: null };
             }
         }); 
 
-        return ApiResponse([course], 'Course created successfully', '', 201);
+        return { code: 200, message: 'Course created successfully', course: course };
     }
 
     /**
@@ -110,41 +153,34 @@ export class CoursesModel {
         return { code: 200, message: 'Course deleted successfully', course: get_res.result[0] };
     }
 
-    // Change course color
-    static async changeColor(id: number, color: string): Promise<{
+    /**
+     * Update a course by its ID
+     * 
+     * @param id The course id
+     * @param data The data to update
+     */
+    static async update(id: number, data: object): Promise<{
         code: number,
         message: string,
         course: CourseSchema
     }> {
-        const update_sql = `UPDATE courses SET color='${color}' WHERE id=${id}`;
-        let qr = await query(update_sql);
-        const get_sql = `SELECT * FROM courses WHERE id=${id}`;
-        let get_res = await query(get_sql);
+        // Write each field in the data to sql
+        let sql = `UPDATE courses SET `;
+        for(const key in data) {
+            sql += `${key}='${data[key]}', `;
+        }
+        sql = sql.slice(0, -2);
+        sql += ` WHERE id=${id}`;
 
-        if(qr.result == null) 
-            return { code: 500, message: qr.message, course: null };
-        if(qr.result.affectedRows == 0)
+        // Update a course
+        const res = await query(sql);
+        if(res.result === null) 
+            return { code: 500, message: res.message, course: null };
+        if(res.result.affectedRows === 0)
             return { code: 404, message: 'Course not found', course: null };
 
-        return { code: 200, message: 'Course color updated successfully', course: get_res.result[0] };
-    }
-
-    // Change course thumbnail
-    static async changeThumbnail(id: number, thumbnail_url: string): Promise<{
-        code: number,
-        message: string,
-        course: CourseSchema
-    }> {
-        const update_sql = `UPDATE courses SET thumbnail_url='${thumbnail_url}' WHERE id=${id}`;
-        let qr = await query(update_sql);
-        const get_sql = `SELECT * FROM courses WHERE id=${id}`;
-        let get_res = await query(get_sql);
-
-        if(qr.result == null) 
-            return { code: 500, message: qr.message, course: null };
-        if(qr.result.affectedRows == 0)
-            return { code: 404, message: 'Course not found', course: null };
-
-        return { code: 200, message: 'Course thumbnail updated successfully', course: get_res.result[0] };
+        // Success
+        const course = (await this.getById(id)).course;
+        return { code: 200, message: 'Course updated', course: course };
     }
 }

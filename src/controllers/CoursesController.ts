@@ -16,7 +16,7 @@ const CoursesController = require('express')();
  */
 CoursesController.get("/", async (req, res) => {
     // Get the course(s)
-    const result = await CoursesModel.get();
+    const result = await CoursesModel.getAll();
     res.status(result.code).send(result);
 });
 
@@ -29,7 +29,7 @@ CoursesController.get("/", async (req, res) => {
  */
 CoursesController.get("/:id", async (req, res) => {
     // Get the course
-    const result = await CoursesModel.get(req.params.id);
+    const result = await CoursesModel.getById(req.params.id);
     res.status(result.code).send(result);
 });
 
@@ -66,7 +66,10 @@ CoursesController.post("/", async (req, res) => {
 
 
 /**
- * 
+ * DELETE /:id
+ * @summary Delete a course by id
+ * @param id The course id
+ * @returns Course if successful, error if not
  */
 CoursesController.delete("/:id", async (req, res) => {
     const courseId = req.params.id;
@@ -80,38 +83,32 @@ CoursesController.delete("/:id", async (req, res) => {
 
 
 /**
- * 
+ * PUT /:id
+ * @summary Update a courses
+ * @param id The course id
+ * @returns Course if successful, error if not
  */
-CoursesController.put("/:id/color", async (req, res) => {
+CoursesController.put("/:id", async (req, res) => {
     const courseId = req.params.id;
-    const color = req.body.color;
+    const course = req.body;
 
     // Validate parameters
     if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
         return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
-    if(color == null || color == undefined || color == '')
-        return res.status(400).json({ code: 400, message: 'Color not provided', course: null });
 
-    const result = await CoursesModel.changeColor(req.params.id, req.body.color);
-    res.status(result.code).send(result);
-});
+    // Allowed fields
+    const updatableFields = ["course_id", "title", "description", "progress", "due_at", "actual_points", "possible_points", "weight"];
+    if(Object.keys(req.body).some(key => !updatableFields.includes(key))) {
+        res.status(400).json({ code: 400, message: 'Invalid field in request', assignment: null });
+        return;
+    }
+    // Check that any field exists
+    if(Object.keys(req.body).length == 0) {
+        res.status(400).json({ code: 400, message: 'No fields provided', assignment: null });
+        return;
+    }
 
-
-/**
- * 
- */
-CoursesController.put("/:id/thumbnail", async (req, res) => {
-    const courseId = req.params.id;
-    const thumbnailUrl = req.body.thumbnail_url;
-    
-    // Course ID must be defined and positive
-    if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
-        return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
-    // Thumbnail URL must be defined and be a valid URL
-    if(thumbnailUrl == null || thumbnailUrl == undefined || thumbnailUrl == '' || !thumbnailUrl.includes('http'))
-        return res.status(400).json({ code: 400, message: 'Invalid thumbnail URL', course: null });
-
-    const result = await CoursesModel.changeThumbnail(req.params.id, req.body.thumbnail_url);
+    const result = await CoursesModel.update(req.params.id, req.body.color);
     res.status(result.code).send(result);
 });
 
