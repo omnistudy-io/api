@@ -284,6 +284,7 @@ CREATE TABLE user_study_sets (
   id integer AUTO_INCREMENT,
   user_id integer,
   title varchar(100),
+  description varchar(500),
   num_questions integer,
   created_at datetime,
   PRIMARY KEY (id),
@@ -365,6 +366,7 @@ insert into user_plans values (null, 1, 1, 0, true, NOW(), NOW(), 0);
 insert into user_profiles values (null, 1, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
 -- Create a course
 insert into courses values (null, 1, 'Web Programming', 'CSCI', '4131', 'Dan Challou', 'Anderson Hall', 'Room 370', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/Challou_Dan_1.jpg', '2024-01-01', '2024-05-01');
+insert into courses values (null, 1, 'Distributed Systems', 'CSCI', '5105', 'Anand Tripathi', 'Keller Hall', 'Room 3-210', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/styles/webp_scaled/public/090623umncse095ret.jpg.webp?itok=kzVpMiHd', '2024-01-01', '2024-05-01');
 -- Create a couple assignments for that course
 insert into assignments values (null, 1, 'Homework 7', 'Create a website from scratch', 0.0, NOW(), '2024-04-12', 96.0, 100.0, 0.2);
 insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app from scratch', 0.0, NOW(), '2024-04-30', 88.0, 100.0, 0.2);
