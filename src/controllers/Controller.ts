@@ -24,7 +24,7 @@ Controller.use('/plans', [auth], PlansController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {
-    res.json({ message: "Welcome to the Controller API!" });
+    res.json({ message: "Welcome to the Controller API - Staging Test!" });
 });
 
 // Import query for general queries
