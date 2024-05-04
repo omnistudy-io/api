@@ -12,15 +12,10 @@ RUN npm run build
 
 # Environment variables
 ENV ENVIRONMENT staging
-ENV HOSTNAME http://staging.api.omnistudy.io
+ENV HOSTNAME http://staging-api.omnistudy.io
 ENV PORT 80
 ENV JWT_SECRET staging_secret
-ENV DB_HOSTNAME http://staging.db.omnistudy.io
-ENV DB_PORT 3306
-ENV DB_USERNAME omnistudy
-ENV DB_PASSWORD testing
-ENV S3_BUCKET omnistudy
-ENV S3_REGION us-west-2
+ENV BUCKET_NAME omnibucket-staging
 
 # Expose port and run the app
 EXPOSE 80
