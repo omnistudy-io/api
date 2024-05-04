@@ -21,8 +21,8 @@ ENV DB_USER root
 ENV DB_DBNAME omnistudy
 ENV DB_PORT 3306
 ENV DB_PASSWORD test
-ENV S3_BUCKET omnistudy
-ENV S3_REGION us-west-2
+ENV PROJECT_ID omnistudy-422217
+ENV BUCKET_NAME omnibucket-dev
 
 # Expose port and run the app
 EXPOSE 3001

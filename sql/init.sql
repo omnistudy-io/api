@@ -373,6 +373,11 @@ insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app fro
 -- Create a couple exams for that course
 insert into exams values (null, 1, 'Midterm', 'Midterm exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
 insert into exams values (null, 1, 'Final', 'Final exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
+-- Create a study set
+insert into user_study_sets values (null, 1, 'Web Programming Questions', 'Study set for the Web Programming course', 10, NOW());
+-- Create some questions for that study set
+insert into user_study_set_questions values (null, 1, 'MCQ', 'What is Node.js?', 'Paris');
+insert into user_study_set_questions values (null, 1, 'MCQ', 'What is Express.js?', 'Berlin');
 
 
 --

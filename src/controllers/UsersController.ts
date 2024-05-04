@@ -10,6 +10,7 @@ import { CoursesModel } from '../models/Courses';
 import { AssignmentsModel } from '../models/Assignments';
 import { ExamsModel } from '../models/Exams';
 import StudySetsModel from '../models/StudySets';
+import { DocumentsModel } from '../models/Documents';
 
 // Create the controller
 const UsersController = require('express')();
@@ -339,6 +340,25 @@ UsersController.get("/:id/study-sets", async (req, res) => {
     }
 
     const response = await StudySetsModel.getByUserId(id);
+    res.status(response.code).json(response);
+});
+
+
+/**
+ * GET /:id/documents
+ * @summary Get all documents for a user
+ * @param id The user id
+ * @returns code: number, message: string, documents: DocumentSchema[]
+ */
+UsersController.get("/:id/documents", async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', documents: [] });
+        return;
+    }
+
+    const response = await DocumentsModel.getByUserId(id);
     res.status(response.code).json(response);
 });
 

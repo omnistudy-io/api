@@ -6,6 +6,7 @@ import AssignmentsController from "./AssignmentsController";
 import ExamsController from "./ExamsController";
 import PlansController from "./PlansController";
 import StudySetsController from "./StudySetsController";
+import DocumentsController from "./DocumentsController";
 
 // Middleware
 import auth from "../auth";
@@ -23,6 +24,7 @@ Controller.use('/assignments', [auth], AssignmentsController);
 Controller.use('/exams', [auth], ExamsController);
 Controller.use('/plans', [auth], PlansController);
 Controller.use('/study-sets', [auth], StudySetsController);
+Controller.use('/documents', [auth], DocumentsController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {

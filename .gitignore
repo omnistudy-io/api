@@ -5,3 +5,6 @@ build
 # Ignore staging/prod docker configs
 docker/prod.sh
 docker/Dockerfile.prod
+
+# Ignore service keys
+src/serviceKey.json
