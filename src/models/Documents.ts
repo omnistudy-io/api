@@ -78,6 +78,36 @@ export class DocumentsModel {
     }
 
     /**
+     * Update a document by its ID
+     * 
+     * @param id The document id
+     * @param data The fields to update
+     * @returns code: number, message: string, document: DocumentSchema
+     */
+    static async update(id: number, data: object) {
+        // Write each field in the data to sql
+        let sql = `UPDATE documents SET `;
+        for(const key in data) {
+            sql += `${key}=${data[key] !== "null" ? `'${data[key]}'` : "NULL"}, `;
+        }
+        sql = sql.slice(0, -2);
+        sql += ` WHERE id=${id}`;
+
+        console.log(sql);
+
+        // Update the document
+        const res = await query(sql);
+        if(res.result === null) 
+            return { code: 500, message: res.message, doc: null }
+        if(res.result.affectedRows === 0)
+            return { code: 404, message: 'Document not found', doc: null }
+
+        // Success
+        const doc = (await this.getById(id)).doc;
+        return { code: 200, message: 'Document updated', doc: doc }
+    }
+
+    /**
      * Delete a document by its ID
      * 
      * @param id The id of the document

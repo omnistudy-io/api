@@ -119,8 +119,6 @@ export class AssignmentsModel {
         sql = sql.slice(0, -2);
         sql += ` WHERE id=${id}`;
 
-        console.log(sql);
-
         // Update the assignment
         const res = await query(sql);
         if(res.result === null) 

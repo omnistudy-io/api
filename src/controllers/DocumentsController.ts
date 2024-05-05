@@ -90,6 +90,37 @@ DocumentsController.post("/", async (req, res) => {
 
 
 /**
+ * PUT /:id
+ * @summary Update a document by its ID
+ * @param id The document ID
+ * @returns code: number, message: string, doc: DocumentSchema
+ */
+DocumentsController.put("/:id", async(req, res) => {
+    // Validate parameters
+    if(isNaN(req.params.id)) {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', doc: null });
+        return;
+    }
+
+    // Allowed fields
+    const updatableFields = ["course_id", "assignment_id", "exam_id"];
+    if(Object.keys(req.body).some(key => !updatableFields.includes(key))) {
+        res.status(400).json({ code: 400, message: 'Invalid field in request', doc: null });
+        return;
+    }
+    // Check that any field exists
+    if(Object.keys(req.body).length == 0) {
+        res.status(400).json({ code: 400, message: 'No fields provided', doc: null });
+        return;
+    }
+
+    // Update assignment
+    const response = await DocumentsModel.update(req.params.id, req.body);
+    res.status(response.code).json(response);
+});
+
+
+/**
  * DELETE /:id
  * @summary Delete a document by its ID
  * @param id The document ID
@@ -100,6 +131,12 @@ DocumentsController.delete("/:id", async (req, res) => {
     if (isNaN(id) || id < 0 || id == null || id == undefined)
         return res.status(400).json({ code: 400, message: 'Invalid Document ID', doc: [] });
 
+    // Delete the file from storage
+    const deleteResult = await Storage.delete(`users/${id}/documents/${id}`);
+    if(!deleteResult.success)
+        return res.status(500).json({ code: 500, message: 'Failed to delete storage document', doc: [] });
+
+    // Delete the document from the database
     const result = await DocumentsModel.delete(id);
     res.status(result.code).json(result);
 });

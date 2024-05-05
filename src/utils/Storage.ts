@@ -65,4 +65,24 @@ export default class Storage {
             blobStream.end(file.data);
         });
     }
+
+    /**
+     * Delete a file from the storage bucket
+     * 
+     * @param remotePath The remote file path, Ex: users/1/kc.png
+     */
+    static async delete(remotePath: string): Promise<{
+        success: boolean
+    }> {
+        return await new Promise((resolve, _) => {
+            this.bucket.file(remotePath).delete((err) => {
+                if(err) {
+                    console.error(err);
+                    resolve({ success: false });
+                }
+                console.log(`Deleted ${remotePath}`);
+                resolve({ success: true });
+            });
+        });
+    }
 }
