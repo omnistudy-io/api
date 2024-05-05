@@ -40,7 +40,7 @@ export class ExamsModel {
         exams: ExamSchema[]
     }> {
         const sql = `
-            SELECT e.*, c.title as courseTitle
+            SELECT e.*, c.title as courseTitle, c.number as courseNumber, c.subject as courseSubject
             FROM users u, courses c, exams e
             WHERE c.id=${courseId} AND u.id=c.user_id AND c.id=e.course_id
         `;
@@ -65,7 +65,7 @@ export class ExamsModel {
         exams: ExamSchema[]
     }> {
         const sql = `
-            SELECT e.*, c.title as courseTitle
+            SELECT e.*, c.title as courseTitle, c.number as courseNumber, c.subject as courseSubject
             FROM users u, courses c, exams e
             WHERE u.id=${userId} AND u.id=c.user_id AND c.id=e.course_id
         `;
