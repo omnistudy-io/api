@@ -40,7 +40,7 @@ export class AssignmentsModel {
         assignments: AssignmentSchema[]
     }> {
         const sql = `
-            SELECT a.*, c.title as courseTitle
+            SELECT a.*, c.title as courseTitle, c.subject as courseSubject, c.number as courseNumber
             FROM users u, courses c, assignments a
             WHERE c.id=${courseId} AND u.id=c.user_id AND c.id=a.course_id
         `;
@@ -65,7 +65,7 @@ export class AssignmentsModel {
         assignments: AssignmentSchema[]
     }> {
         const sql = `
-            SELECT a.*, c.title as courseTitle
+            SELECT a.*, c.title as courseTitle, c.subject as courseSubject, c.number as courseNumber
             FROM users u, courses c, assignments a
             WHERE u.id=${userId} AND u.id=c.user_id AND c.id=a.course_id
         `;
