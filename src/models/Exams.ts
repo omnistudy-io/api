@@ -14,7 +14,11 @@ export class ExamsModel {
         message: string,
         exam: ExamSchema
     }> {
-        const sql = `SELECT * FROM exams WHERE id=${id}`;
+        const sql = `
+            SELECT e.*, c.title as courseTitle, c.number as courseNumber, c.subject as courseSubject 
+            FROM exams e, courses c
+            WHERE e.id=${id} AND e.course_id=c.id
+        `;
         let res = await query(sql);
         if(res.result == null)
             return { code: 500, message: res.message, exam: null };
