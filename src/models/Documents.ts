@@ -7,7 +7,7 @@ export class DocumentsModel {
      * Get a document by its ID
      * 
      * @param id The id of the document
-     * @returns code: number, message: string, doc: UserAiDocSchema
+     * @returns code: number, message: string, doc: DocumentSchema
      */
     static async getById(id: number): Promise<{
         code: number,
@@ -28,7 +28,7 @@ export class DocumentsModel {
      * Get all documents for a given user id
      * 
      * @param userId Id of the user
-     * @returns code: number, message: string, docs: UserAiDocSchema[]
+     * @returns code: number, message: string, docs: DocumentSchema[]
      */
     static async getByUserId(userId: number): Promise<{
         code: number,
@@ -46,10 +46,73 @@ export class DocumentsModel {
     }
 
     /**
+     * Get all documents for a given course id
+     * 
+     * @param courseId ID of the course
+     * @returns code: number, message: string, docs: DocumentSchema[]
+     */
+    static async getByCourseId(courseId: number): Promise<{
+        code: number,
+        message: string,
+        docs: DocumentSchema[]
+    }> {
+        const sql = `SELECT * FROM documents WHERE course_id=${courseId}`;
+        let res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, docs: [] };
+        if(res.result.length == 0)
+            return { code: 404, message: 'No documents found', docs: [] };
+
+        return { code: 200, message: 'Documents found', docs: res.result };
+    }
+
+    /**
+     * Get all documents for a given assignment id
+     * 
+     * @param assignmentId ID of the assignment
+     * @returns code: number, message: string, docs: DocumentSchema[]
+     */
+    static async getByAssignmentId(assignmentId: number): Promise<{
+        code: number,
+        message: string,
+        docs: DocumentSchema[]
+    }> {
+        const sql = `SELECT * FROM documents WHERE assignment_id=${assignmentId}`;
+        let res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, docs: [] };
+        if(res.result.length == 0)
+            return { code: 404, message: 'No documents found', docs: [] };
+
+        return { code: 200, message: 'Documents found', docs: res.result };
+    }
+
+    /**
+     * Get all documents for a given exam id
+     * 
+     * @param examId ID of the exam
+     * @returns code: number, message: string, docs: DocumentSchema[]
+     */
+    static async getByExamId(examId: number): Promise<{
+        code: number,
+        message: string,
+        docs: DocumentSchema[]
+    }> {
+        const sql = `SELECT * FROM documents WHERE exam_id=${examId}`;
+        let res = await query(sql);
+        if(res.result == null)
+            return { code: 500, message: res.message, docs: [] };
+        if(res.result.length == 0)
+            return { code: 404, message: 'No documents found', docs: [] };
+
+        return { code: 200, message: 'Documents found', docs: res.result };
+    }
+
+    /**
      * Create a new document
      * 
      * @param doc Document to create
-     * @returns code: number, message: string, doc: UserAiDocSchema
+     * @returns code: number, message: string, doc: DocumentSchema
      */
     static async create(doc: DocumentSchema): Promise<{
         code: number,
@@ -109,7 +172,7 @@ export class DocumentsModel {
      * Delete a document by its ID
      * 
      * @param id The id of the document
-     * @returns code: number, message: string, 
+     * @returns code: number, message: string, doc: DocumentSchema
      */
     static async delete(id: number) {
         // Get the document

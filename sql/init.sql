@@ -388,6 +388,13 @@ insert into exams values (null, 3, 'Midterm', 'Midterm exam', 'Smith Hall', 'Roo
 insert into exams values (null, 3, 'Final', 'Final exam', 'Smith Hall', 'Room 100', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
 insert into exams values (null, 4, 'Midterm', 'Midterm exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
 insert into exams values (null, 4, 'Final', 'Final exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
+-- Create some documents
+insert into documents values (null, 1, 1, 1, 1, '5802 Tech Talk.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/5802 Tech Talk.pdf', null, false);
+insert into documents values (null, 1, 1, 2, 2, 'Final Write Up.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Final Write Up.pdf', null, false);
+insert into documents values (null, 1, 2, 3, 4, 'INET 3102 Reflection 6.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/INET 3102 Reflection 6.pdf', null, false);
+insert into documents values (null, 1, 2, 5, 4, 'Lab 5 Group Work.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Lab 5 Group Work.pdf', null, false);
+insert into documents values (null, 1, 3, 6, 6, 'Note Apr 8, 2024.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Note Apr 8, 2024.pdf', null, false);
+insert into documents values (null, 1, 4, 9, 7, 'Summary Financial Projections - Financials (1).pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Summary Financial Projections - Financials (1).pdf', null, false);
 -- Create a study set
 insert into user_study_sets values (null, 1, 'Web Programming Questions', 'Study set for the Web Programming course', 10, NOW());
 insert into user_study_sets values (null, 1, 'Distributed Systems Questions', 'Study set for the Distributed Systems course', 10, NOW());

@@ -4,6 +4,7 @@ import { query } from '../db';
 import { CourseEventsModel } from '../models/CourseEvents';
 import { AssignmentsModel } from '../models/Assignments';
 import { ExamsModel } from '../models/Exams';
+import { DocumentsModel } from '../models/Documents';
 
 // Create the controller
 const CoursesController = require('express')();
@@ -148,6 +149,25 @@ CoursesController.get("/:id/exams", async (req, res) => {
     }
 
     const response = await ExamsModel.getByCourseId(id);
+    res.status(response.code).json(response);
+});
+
+
+/**
+ * GET /:id/documents
+ * @summary Get all documents for a course
+ * @param id The course id
+ * @returns code: number, message: string, docs: DocumentSchema[]
+ */
+CoursesController.get("/:id/documents", async (req, res) => {
+    // Validate parameters
+    const id = req.params.id;
+    if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', docs: [] });
+        return;
+    }
+
+    const response = await DocumentsModel.getByCourseId(id);
     res.status(response.code).json(response);
 });
 

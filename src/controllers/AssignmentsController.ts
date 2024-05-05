@@ -1,4 +1,5 @@
 import { AssignmentsModel } from "../models/Assignments";
+import { DocumentsModel } from "../models/Documents";
 
 // Create the controller
 const AssignmentsController = require('express')();
@@ -89,6 +90,22 @@ AssignmentsController.put("/:id", async(req, res) => {
     // Update assignment
     const response = await AssignmentsModel.update(req.params.id, req.body);
     res.status(response.code).json(response);
+});
+
+
+/**
+ * GET /:id/documents
+ * @summary Get all documents for an assignment
+ * @param id The assignment ID
+ * @returns code: number, message: string, docs: DocumentSchema[]
+ */
+AssignmentsController.get("/:id/documents", async(req, res) => {
+    const assignmentId = req.params.id;
+    if(isNaN(assignmentId) || assignmentId < 0 || assignmentId == null || assignmentId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Assignment ID', assignment: [] });
+
+    const result = await DocumentsModel.getByAssignmentId(assignmentId);
+    res.status(result.code).json(result);
 });
 
 

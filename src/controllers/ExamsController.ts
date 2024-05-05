@@ -1,3 +1,4 @@
+import { DocumentsModel } from '../models/Documents';
 import { ExamsModel } from '../models/Exams';
 
 // Create the controller
@@ -78,6 +79,23 @@ ExamsController.put("/:id", async (req, res) => {
     }
 
     const result = await ExamsModel.update(examId, data);
+    res.status(result.code).send(result);
+});
+
+
+/**
+ * GET /:id/documents
+ * @summary Get all documents for an exam
+ * @param id The exam ID
+ * @returns code: number, message: string, docs: DocumentSchema[]
+ */
+ExamsController.get("/:id/documents", async (req, res) => {
+    const examId = req.params.id;
+    if(isNaN(examId) || examId < 0 || examId == null || examId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Exam ID', exam: null });
+
+    // Get the exam(s)
+    const result = await DocumentsModel.getByExamId(examId);
     res.status(result.code).send(result);
 });
 
