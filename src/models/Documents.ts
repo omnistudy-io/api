@@ -93,8 +93,6 @@ export class DocumentsModel {
         sql = sql.slice(0, -2);
         sql += ` WHERE id=${id}`;
 
-        console.log(sql);
-
         // Update the document
         const res = await query(sql);
         if(res.result === null) 
