@@ -14,7 +14,11 @@ export class AssignmentsModel {
         message: string,
         assignment: AssignmentSchema
     }> {
-        const sql = `SELECT * FROM assignments WHERE id=${id}`;
+        const sql = `
+            SELECT a.*, c.title as courseTitle, c.subject as courseSubject, c.number as courseNumber
+            FROM assignments a, courses c
+            WHERE a.id=${id} AND a.course_id=c.id
+        `;
         let res = await query(sql);
         if(res.result == null)
             return { code: 500, message: res.message, assignment: null };
