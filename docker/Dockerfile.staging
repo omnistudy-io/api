@@ -16,6 +16,7 @@ ENV HOSTNAME http://staging-api.omnistudy.io
 ENV PORT 80
 ENV JWT_SECRET staging_secret
 ENV BUCKET_NAME omnibucket-staging
+ENV AI_BASE_URL https://staging-ai.omnistudy.io
 
 # Expose port and run the app
 EXPOSE 80

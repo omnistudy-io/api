@@ -23,6 +23,7 @@ ENV DB_PORT 3306
 ENV DB_PASSWORD test
 ENV PROJECT_ID omnistudy-422217
 ENV BUCKET_NAME omnibucket-dev
+ENV AI_BASE_URL http://ai:5001
 
 # Expose port and run the app
 EXPOSE 3001
