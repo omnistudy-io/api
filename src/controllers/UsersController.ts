@@ -63,6 +63,15 @@ UsersController.get("/", async (req, res) => {
     res.status(response.code).json(response);
 });
 
+/**
+ * GET /current
+ * @summary Get the current user
+ * @returns User if successful, error if not
+ */
+UsersController.get("/current", async (req, res) => {
+    res.status(200).json({ user: req.user });
+});
+
 
 /**
  * GET /:id
@@ -276,7 +285,7 @@ UsersController.put('/:id/plan', async (req, res) => {
  */
 UsersController.get('/:id/courses', async (req, res) => {
     // Validate parameters
-    const id = req.params.id;
+    let id = req.params.id;
     if(isNaN(id) || id < 0 || id == null || id == undefined || id == '') {
         res.status(400).json({ code: 400, message: 'Invalid id parameter', courses: [] });
         return;

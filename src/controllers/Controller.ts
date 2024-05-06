@@ -10,7 +10,7 @@ import DocumentsController from "./DocumentsController";
 import AIController from "./AIController";
 
 // Middleware
-import auth from "../auth";
+import auth, { uidReplace } from "../auth";
 
 // Create the controller
 const Controller = require('express')();
@@ -19,14 +19,14 @@ const Controller = require('express')();
 Controller.use('/auth', AuthController);
 
 // Register protected sub-controllers
-Controller.use('/users', [auth], UsersController);
-Controller.use('/courses', [auth], CoursesController);
-Controller.use('/assignments', [auth], AssignmentsController); 
-Controller.use('/exams', [auth], ExamsController);
-Controller.use('/plans', [auth], PlansController);
-Controller.use('/study-sets', [auth], StudySetsController);
-Controller.use('/documents', [auth], DocumentsController);
-Controller.use('/ai', [auth], AIController);
+Controller.use('/users', [auth, uidReplace], UsersController);
+Controller.use('/courses', [auth, uidReplace], CoursesController);
+Controller.use('/assignments', [auth, uidReplace], AssignmentsController); 
+Controller.use('/exams', [auth, uidReplace], ExamsController);
+Controller.use('/plans', [auth, uidReplace], PlansController);
+Controller.use('/study-sets', [auth, uidReplace], StudySetsController);
+Controller.use('/documents', [auth, uidReplace], DocumentsController);
+Controller.use('/ai', [auth, uidReplace], AIController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {

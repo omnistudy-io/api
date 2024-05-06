@@ -22,7 +22,6 @@ AuthController.post("/login", async (req, res) => {
         return res.status(200).json(ApiResponse([], "Login failed", "User not found", 404));
 
     const user: UserSchema = qr.result[0];
-    console.log(user);
     const passwordHash = user.password;
 
     // Compare the password with the hash
@@ -32,11 +31,7 @@ AuthController.post("/login", async (req, res) => {
     if(result) {
         // Create a token
         const data = {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            name: user.name,
-            api_key: user.api_key
+            ...user, password: undefined
         }
         const token = jwtSign(data, 'testing');
         res.status(200).json(ApiResponse([token], "Login successful", qr.message, 200));

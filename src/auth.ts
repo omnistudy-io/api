@@ -1,4 +1,5 @@
 require('dotenv').config();
+import Controller from "./controllers/Controller";
 import { AuthModel } from "./models/Auth";
 
 /**
@@ -17,11 +18,12 @@ import { AuthModel } from "./models/Auth";
 export default async function auth(req, res, next) {
 
     // Skip authentication in dev environment
-    if(process.env.ENVIRONMENT === "dev")
-        return next();
+    // if(process.env.ENVIRONMENT === "dev")
+        // return next();
 
     // Check for the authorization header
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+    console.log(authHeader);
     if(authHeader === undefined || authHeader === null) {
         return res.status(401).json({ code: 401, message: "Authentication header missing" });
     }
@@ -33,14 +35,20 @@ export default async function auth(req, res, next) {
         return res.status(401).json({ code: 401, message: "Invalid authentication" });
     }
     else {
-        req.user = decoded.data;
         // Validate the user against the db
-        const valid = await AuthModel.validateUser(req.user.id, req.user.api_key);
+        const valid = await AuthModel.validateUser(decoded.data.id, decoded.data.api_key);
         if(!valid) {
             return res.status(401).json({ code: 401, message: "Invalid authentication" });
         }
         else {
+            req.user = decoded.data;
             next();
         }
     }
+}
+
+
+export function uidReplace(req, res, next) {
+    req.url = req.url.replaceAll("%7Buid%7D", req.user.id).replaceAll("{uid}", req.user.id);
+    next();
 }

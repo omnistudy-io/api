@@ -1,5 +1,6 @@
 const expressUploader = require("express-fileupload");
 import { DocumentsModel } from "../models/Documents";
+import { UserSchema } from "../schema";
 import Storage from "../utils/Storage";
 import getFileExt from "../utils/getFileExt";
 
@@ -67,7 +68,9 @@ DocumentsController.post("/", async (req, res) => {
 
     // Upload the file to the storage bucket
     const document = req.files.document;
-    const uploadResult = await Storage.uploadBytes(document, `users/${userId}/documents/${document.name}`);
+    const user: UserSchema = req.user;
+    console.log(user);
+    const uploadResult = await Storage.uploadBytes(document, `users/${user.api_key}/documents/${document.name}`);
     if(!uploadResult.success)
         return res.status(500).json({ code: 500, message: 'Failed to upload document', doc: [] });
 
@@ -80,7 +83,7 @@ DocumentsController.post("/", async (req, res) => {
         exam_id: examId,
         title: document.name,
         ext: getFileExt(document.name),
-        url: `https://storage.googleapis.com/${process.env.BUCKET_NAME}/users/${userId}/documents/${document.name}`,
+        url: `https://storage.googleapis.com/${process.env.BUCKET_NAME}/users/${user.api_key}/documents/${document.name}`,
         ext_icon_url: '',
         is_note: false
     };
@@ -132,7 +135,11 @@ DocumentsController.delete("/:id", async (req, res) => {
         return res.status(400).json({ code: 400, message: 'Invalid Document ID', doc: [] });
 
     // Delete the file from storage
-    const deleteResult = await Storage.delete(`users/${id}/documents/${id}`);
+    const document = await DocumentsModel.getById(id);
+    if(!document.doc) 
+        return res.status(404).json({ code: 404, message: 'Document not found', doc: [] });
+    const user: UserSchema = req.user;
+    const deleteResult = await Storage.delete(`users/${user.api_key}/documents/${document.doc.title}`);
     if(!deleteResult.success)
         return res.status(500).json({ code: 500, message: 'Failed to delete storage document', doc: [] });
 

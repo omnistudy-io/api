@@ -360,10 +360,13 @@ insert into plan_features values(null, 3, 'Question Generation', 'qgen', true);
 insert into plan_features values(null, 3, 'Document Summarization', 'summ', true);
 -- Create a user
 insert into users values (null, UUID(), 'Dev', 'User', 'Dev User', 'dev', 'dev@localhost', '$2b$10$bqjXk8idtUq/9zCm2IszeOO2qZwQFRFY3u5IxpKcaFjuXIY4.y8i2', '(763) 370-0010', NOW(), false);
+insert into users values (null, UUID(), 'John', 'Appleseed', 'John Appleseed', 'john', 'john@localhost', '$2b$10$bqjXk8idtUq/9zCm2IszeOO2qZwQFRFY3u5IxpKcaFjuXIY4.y8i2', '(763) 370-0010', NOW(), false);
 -- Create a user plan
 insert into user_plans values (null, 1, 1, 0, true, NOW(), NOW(), 0);
+insert into user_plans values (null, 2, 2, 0, true, NOW(), NOW(), 0);
 -- Create a user profile
 insert into user_profiles values (null, 1, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
+insert into user_profiles values (null, 2, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
 -- Create a course
 insert into courses values (null, 1, 'Web Programming', 'CSCI', '4131', 'Dan Challou', 'Anderson Hall', 'Room 370', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/Challou_Dan_1.jpg', '2024-01-01', '2024-05-01');
 insert into courses values (null, 1, 'Distributed Systems', 'CSCI', '5105', 'Anand Tripathi', 'Keller Hall', 'Room 3-210', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/styles/webp_scaled/public/090623umncse095ret.jpg.webp?itok=kzVpMiHd', '2024-01-01', '2024-05-01');
@@ -371,23 +374,23 @@ insert into courses values (null, 1, 'Software Engineering', 'CSCI', '5801', 'Da
 insert into courses values (null, 1, 'Computer Networks', 'CSCI', '4601', 'Zhi-Li Zhang', 'Tate Hall', 'Room 105', '#FF0000', 'https://www.auburn.edu/academic/cosam/faculty/math_stats/zheng/headshot.jpg', '2024-01-01', '2024-05-01');
 -- Create a couple assignments for that course
 insert into assignments values (null, 1, 'Homework 7', 'Create a website from scratch', 0.0, NOW(), '2024-04-12', 96.0, 100.0, 0.2);
-insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app from scratch', 0.0, NOW(), '2024-04-30', 88.0, 100.0, 0.2);
-insert into assignments values (null, 2, 'Programming Assignment 1', 'Create a mock bank server using Java RMI', 0.0, NOW(), '2024-04-12', 72.0, 100.0, 0.2);
+insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app from scratch', 0.0, NOW(), '2024-05-30', 88.0, 100.0, 0.2);
+insert into assignments values (null, 2, 'Programming Assignment 1', 'Create a mock bank server using Java RMI', 0.0, NOW(), '2024-06-12', 72.0, 100.0, 0.2);
 insert into assignments values (null, 2, 'Programming Assignment 2', 'Create a serverless bank client using Java RMI and multithreading', 0.0, NOW(), '2024-04-30', 88.0, 100.0, 0.2);
 insert into assignments values (null, 2, 'Programming Assignment 3', 'Create a distributed hash table using the Chord protocol and Java RMI', 0.0, NOW(), '2024-05-12', 77.0, 100.0, 0.2);
-insert into assignments values (null, 3, 'Software Design Project', 'Design a software system for a local business', 0.0, NOW(), '2024-04-12', 91.5, 100.0, 0.2);
-insert into assignments values (null, 3, 'Software Implementation Project', 'Implement the software system designed in the previous assignment', 0.0, NOW(), '2024-04-30', 88.0, 100.0, 0.2);
-insert into assignments values (null, 4, 'TCP Layer', 'Implement a TCP layer in C', 0.0, NOW(), '2024-04-12', 90.0, 100.0, 0.2);
-insert into assignments values (null, 4, 'UDP Layer', 'Implement a UDP layer in C', 0.0, NOW(), '2024-04-30', 100.0, 100.0, 0.2);
+insert into assignments values (null, 3, 'Software Design Project', 'Design a software system for a local business', 0.0, NOW(), '2024-05-18', 91.5, 100.0, 0.2);
+insert into assignments values (null, 3, 'Software Implementation Project', 'Implement the software system designed in the previous assignment', 0.0, NOW(), '2024-06-02', 88.0, 100.0, 0.2);
+insert into assignments values (null, 4, 'TCP Layer', 'Implement a TCP layer in C', 0.0, NOW(), '2024-05-29', 90.0, 100.0, 0.2);
+insert into assignments values (null, 4, 'UDP Layer', 'Implement a UDP layer in C', 0.0, NOW(), '2024-05-18', 100.0, 100.0, 0.2);
 -- Create a couple exams for that course
-insert into exams values (null, 1, 'Midterm', 'Midterm exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 1, 'Midterm', 'Midterm exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-04-01', '2024-04-01 08:00:00', '2024-04-01 09:00:00', 92.0, 100.0, 0.3);
 insert into exams values (null, 1, 'Final', 'Final exam', 'Anderson Hall', 'Room 370', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 2, 'Midterm', 'Midterm exam', 'Keller Hall', 'Room 3-210', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 2, 'Final', 'Final exam', 'Keller Hall', 'Room 3-210', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 3, 'Midterm', 'Midterm exam', 'Smith Hall', 'Room 100', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 3, 'Final', 'Final exam', 'Smith Hall', 'Room 100', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 4, 'Midterm', 'Midterm exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-03-01', '2024-03-01 08:00:00', '2024-03-01 09:00:00', 92.0, 100.0, 0.3);
-insert into exams values (null, 4, 'Final', 'Final exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-05-01', '2024-05-01 08:00:00', '2024-05-01 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 2, 'Midterm', 'Midterm exam', 'Keller Hall', 'Room 3-210', 'Seat 1', '2024-04-12', '2024-04-12 08:00:00', '2024-04-12 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 2, 'Final', 'Final exam', 'Keller Hall', 'Room 3-210', 'Seat 1', '2024-05-07', '2024-05-07 08:00:00', '2024-05-07 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 3, 'Midterm', 'Midterm exam', 'Smith Hall', 'Room 100', 'Seat 1', '2024-03-29', '2024-03-29 08:00:00', '2024-03-29 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 3, 'Final', 'Final exam', 'Smith Hall', 'Room 100', 'Seat 1', '2024-04-20', '2024-04-20 08:00:00', '2024-04-20 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 4, 'Midterm', 'Midterm exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-05-08', '2024-05-08 08:00:00', '2024-05-08 09:00:00', 92.0, 100.0, 0.3);
+insert into exams values (null, 4, 'Final', 'Final exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-06-02', '2024-06-02 08:00:00', '2024-06-02 09:00:00', 92.0, 100.0, 0.3);
 -- Create some documents
 insert into documents values (null, 1, 1, 1, 1, '5802 Tech Talk.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/5802 Tech Talk.pdf', null, false);
 insert into documents values (null, 1, 1, 2, 2, 'Final Write Up.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Final Write Up.pdf', null, false);
