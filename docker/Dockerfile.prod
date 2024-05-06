@@ -6,9 +6,9 @@ WORKDIR /api
 
 # Copy files and install dependencies
 COPY package*.json ./
+COPY . .
 RUN npm install
 RUN npm run build
-COPY . .
 
 # Environment variables
 ENV ENVIRONMENT prod
