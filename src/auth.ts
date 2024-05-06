@@ -25,7 +25,7 @@ export default async function auth(req, res, next) {
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     console.log(authHeader);
     if(authHeader === undefined || authHeader === null) {
-        return res.status(401).json({ code: 401, message: "Authentication header missing" });
+        return res.status(401).json({ code: 401, message: "Invalid authentication" });
     }
     
     // Decode the token
