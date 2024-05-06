@@ -1,0 +1,23 @@
+# Download Node.js image from Docker Hub
+FROM node:latest
+
+# Create directory for container
+WORKDIR /api
+
+# Copy files and install dependencies
+COPY package*.json ./
+RUN npm install
+RUN npm run build
+COPY . .
+
+# Environment variables
+ENV ENVIRONMENT prod
+ENV HOSTNAME http://api.omnistudy.io
+ENV PORT 80
+ENV JWT_SECRET prod_secret
+ENV BUCKET_NAME omnibucket-prod
+ENV AI_BASE_URL https://ai.omnistudy.io
+
+# Expose port and run the app
+EXPOSE 80
+CMD ["npm", "run", "start"]
