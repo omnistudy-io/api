@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "node build/app.js",
-    "dev": "nodemon src/app.ts",
+    "dev": "export $(cat .env | xargs) && nodemon src/app.ts",
     "lint": "eslint . --ext .ts",
     "test": "./node_modules/.bin/jest",
     "build": "tsc"

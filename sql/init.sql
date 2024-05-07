@@ -33,6 +33,10 @@ CREATE TABLE plans (
   level integer,
   name varchar(100),
   price double,
+  monthly_price double,
+  annual_price double,
+  monthly_price_id varchar(100),
+  annual_price_id varchar(100),
   description varchar(100),
   PRIMARY KEY (id, level)
 );
@@ -343,17 +347,17 @@ CREATE TABLE user_ai_docs (
 -- Insert data into the tables
 --
 -- Create the plans and plan features
-insert into plans values (1, 1, 'Free', 0.0, 'Free plan with limited features');
+insert into plans values (1, 1, 'Free', 0.0, 0.0, 0.0, '', '', 'Free plan with limited features');
 insert into plan_features values(null, 1, 'Course & Assignment Planning', 'planner', true);
 insert into plan_features values(null, 1, 'Online Note Taker & Transcription', 'notes', true);
 insert into plan_features values(null, 1, 'Question Generation', 'qgen', false);
 insert into plan_features values(null, 1, 'Document Summarization', 'summ', false);
-insert into plans values (2, 2, 'OmniStudy', 9.99, 'Our most popular plan');
+insert into plans values (2, 2, 'OmniStudy', 11.99, 11.99, 9.99, 'price_1PDbkRDapKE0mGmXzA9AjgMX', 'price_1PDbkgDapKE0mGmXdY8eJKMx', 'Our most popular plan');
 insert into plan_features values(null, 2, 'Course & Assignment Planning', 'planner', true);
 insert into plan_features values(null, 2, 'Online Note Taker & Transcription', 'notes', true);
 insert into plan_features values(null, 2, 'Question Generation', 'qgen', true);
 insert into plan_features values(null, 2, 'Document Summarization', 'summ', false);
-insert into plans values (3, 3, 'Advanced', 19.99, 'Advanced plan with all features');
+insert into plans values (3, 3, 'Advanced', 21.99, 21.99, 19.99, 'price_1PDdQUDapKE0mGmXZmpQAW7M', 'price_1PDdR1DapKE0mGmXaCXjGlrd', 'Advanced plan with all features');
 insert into plan_features values(null, 3, 'Course & Assignment Planning', 'planner', true);
 insert into plan_features values(null, 3, 'Online Note Taker & Transcription', 'notes', true);
 insert into plan_features values(null, 3, 'Question Generation', 'qgen', true);

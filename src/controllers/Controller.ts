@@ -8,6 +8,7 @@ import PlansController from "./PlansController";
 import StudySetsController from "./StudySetsController";
 import DocumentsController from "./DocumentsController";
 import AIController from "./AIController";
+import PaymentsController from "./PaymentsController";
 
 // Middleware
 import auth, { uidReplace } from "../auth";
@@ -27,6 +28,7 @@ Controller.use('/plans', [auth, uidReplace], PlansController);
 Controller.use('/study-sets', [auth, uidReplace], StudySetsController);
 Controller.use('/documents', [auth, uidReplace], DocumentsController);
 Controller.use('/ai', [auth, uidReplace], AIController);
+Controller.use('/payments', [auth, uidReplace], PaymentsController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {

@@ -5,3 +5,6 @@ build
 # Ignore the GCP service key
 serviceKey.json
 src/serviceKey.json
+
+# Ignore environment variables
+.env
