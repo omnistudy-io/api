@@ -95,6 +95,7 @@ CREATE TABLE courses (
   id integer AUTO_INCREMENT,
   user_id integer,
   title varchar(200),
+  description varchar(1000),
   subject varchar(10),
   number varchar(10),
   professor varchar(150),
@@ -372,10 +373,10 @@ insert into user_plans values (null, 2, 2, 0, true, NOW(), NOW(), 0);
 insert into user_profiles values (null, 1, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
 insert into user_profiles values (null, 2, '1234 Avenue Street', 'Suite 250', 'Minneapolis', 'MN', 'USA', '55401', 'University of Minnesota - Twin Cities', 'Sophomore', 'https://eulyx.com/images/headshot.jpg', 'Passionate web developer', 1, 1, 2004, 20);
 -- Create a course
-insert into courses values (null, 1, 'Web Programming', 'CSCI', '4131', 'Dan Challou', 'Anderson Hall', 'Room 370', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/Challou_Dan_1.jpg', '2024-01-01', '2024-05-01');
-insert into courses values (null, 1, 'Distributed Systems', 'CSCI', '5105', 'Anand Tripathi', 'Keller Hall', 'Room 3-210', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/styles/webp_scaled/public/090623umncse095ret.jpg.webp?itok=kzVpMiHd', '2024-01-01', '2024-05-01');
-insert into courses values (null, 1, 'Software Engineering', 'CSCI', '5801', 'Dan Knights', 'Smith Hall', 'Room 100', '#FF0000', 'https://tangledlilac.com/wp-content/uploads/2021/05/Flagstaff-Sedona-Real-Estate-Photographer_1025-1-683x1024.jpg', '2024-01-01', '2024-05-01');
-insert into courses values (null, 1, 'Computer Networks', 'CSCI', '4601', 'Zhi-Li Zhang', 'Tate Hall', 'Room 105', '#FF0000', 'https://www.auburn.edu/academic/cosam/faculty/math_stats/zheng/headshot.jpg', '2024-01-01', '2024-05-01');
+insert into courses values (null, 1, 'Web Programming', '', 'CSCI', '4131', 'Dan Challou', 'Anderson Hall', 'Room 370', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/Challou_Dan_1.jpg', '2024-01-01', '2024-05-01');
+insert into courses values (null, 1, 'Distributed Systems', '', 'CSCI', '5105', 'Anand Tripathi', 'Keller Hall', 'Room 3-210', '#FF0000', 'https://cse.umn.edu/sites/cse.umn.edu/files/styles/webp_scaled/public/090623umncse095ret.jpg.webp?itok=kzVpMiHd', '2024-01-01', '2024-05-01');
+insert into courses values (null, 1, 'Software Engineering', '', 'CSCI', '5801', 'Dan Knights', 'Smith Hall', 'Room 100', '#FF0000', 'https://tangledlilac.com/wp-content/uploads/2021/05/Flagstaff-Sedona-Real-Estate-Photographer_1025-1-683x1024.jpg', '2024-01-01', '2024-05-01');
+insert into courses values (null, 1, 'Computer Networks', '', 'CSCI', '4601', 'Zhi-Li Zhang', 'Tate Hall', 'Room 105', '#FF0000', 'https://www.auburn.edu/academic/cosam/faculty/math_stats/zheng/headshot.jpg', '2024-01-01', '2024-05-01');
 -- Create a couple assignments for that course
 insert into assignments values (null, 1, 'Homework 7', 'Create a website from scratch', 0.0, NOW(), '2024-04-12', 96.0, 100.0, 0.2);
 insert into assignments values (null, 1, 'Homework 8', 'Create a Node.js app from scratch', 0.0, NOW(), '2024-05-30', 88.0, 100.0, 0.2);

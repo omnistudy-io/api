@@ -98,9 +98,9 @@ export class CoursesModel {
                     if(eventDef.days[current.getDay()]) {
                         // Create the new course event
                         const course_event_sql = `INSERT INTO course_events (
-                            course_id, title, date, start_time, end_time, length, type
+                            course_id, title, description, date, start_time, end_time, length, type
                         ) VALUES (
-                            '${course.id}', '${eventDef.name}', '${dayString}', '${dayString} ${eventDef.startTime}', '${dayString} ${eventDef.endTime}', 0.00, '${eventDef.rule}'
+                            '${course.id}', '${course.description}', '${eventDef.name}', '${dayString}', '${dayString} ${eventDef.startTime}', '${dayString} ${eventDef.endTime}', 0.00, '${eventDef.rule}'
                         )`;
                         let qr = await query(course_event_sql);
                         if(qr.result == null || qr.result.affectedRows == 0) 
