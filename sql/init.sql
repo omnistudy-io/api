@@ -157,9 +157,9 @@ CREATE TABLE documents (
   is_note bool,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES courses(id),
-  FOREIGN KEY (assignment_id) REFERENCES assignments(id),
-  FOREIGN KEY (exam_id) REFERENCES exams(id)
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL,
+  FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE SET NULL,
+  FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE SET NULL
 );
 
 -- Textbooks table
