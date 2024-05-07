@@ -1,4 +1,5 @@
 import { AssignmentsModel } from "../models/Assignments";
+import ChatsModel from "../models/Chats";
 import { DocumentsModel } from "../models/Documents";
 
 // Create the controller
@@ -105,6 +106,22 @@ AssignmentsController.get("/:id/documents", async(req, res) => {
         return res.status(400).json({ code: 400, message: 'Invalid Assignment ID', assignment: [] });
 
     const result = await DocumentsModel.getByAssignmentId(assignmentId);
+    res.status(result.code).json(result);
+});
+
+
+/**
+ * GET /:id/chats
+ * @summary Get all chats for an assignment
+ * @param id The assignment ID
+ * @returns code: number, message: string, chats: ChatSchema[]
+ */
+AssignmentsController.get("/:id/chats", async (req, res) => {
+    const assignmentId = req.params.id;
+    if(isNaN(assignmentId) || assignmentId < 0 || assignmentId == null || assignmentId == undefined)
+        return res.status(400).json({ code: 400, message: 'Invalid Assignment ID', assignment: [] });
+
+    const result = await ChatsModel.getByAssignmentId(assignmentId);
     res.status(result.code).json(result);
 });
 

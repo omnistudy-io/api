@@ -1,6 +1,5 @@
 import { query } from "../db";
-import { PlanSchema } from "../schema";
-import { PlanFeatureSchema } from "../schema/plan_features";
+import { PlanSchema, PlanFeatureSchema } from "../schema";
 
 export class PlansModel {
 
@@ -54,7 +53,7 @@ export class PlansModel {
     static async getFeatures(id: number): Promise<{
         code: number,
         message: string,
-        features: PlanFeatureSchema
+        features: PlanFeatureSchema[]
     }> {
         const sql = `SELECT * FROM plan_features WHERE plan_id=${id}`;
         const res = await query(sql);

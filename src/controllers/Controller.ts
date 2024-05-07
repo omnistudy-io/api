@@ -9,6 +9,8 @@ import StudySetsController from "./StudySetsController";
 import DocumentsController from "./DocumentsController";
 import AIController from "./AIController";
 import PaymentsController from "./PaymentsController";
+import ChatsController from "./ChatsController";
+import ChatMessagesController from "./ChatMessagesController";
 
 // Middleware
 import auth, { uidReplace } from "../auth";
@@ -29,6 +31,8 @@ Controller.use('/study-sets', [auth, uidReplace], StudySetsController);
 Controller.use('/documents', [auth, uidReplace], DocumentsController);
 Controller.use('/ai', [auth, uidReplace], AIController);
 Controller.use('/payments', [auth, uidReplace], PaymentsController);
+Controller.use('/chats', [auth, uidReplace], ChatsController);
+Controller.use('/chat-messages', [auth, uidReplace], ChatMessagesController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {

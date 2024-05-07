@@ -8,6 +8,14 @@ export interface PlanSchema {
     monthly_price_id: string;
     annual_price_id: string;
     description: string;
+    features: Array<PlanFeatureSchema>;
+}
+
+export interface PlanFeatureSchema {
+    id: number;
+    description: string;
+    tags: string;
+    included: boolean;
 }
 
 export interface PlansRows extends Array<PlanSchema> {};

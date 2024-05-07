@@ -15,7 +15,7 @@ PlansController.get('/', async (req, res) => {
     for(let i = 0; i < data.plans.length; i++) {
         const plan = data.plans[i];
         const planFeatures = await PlansModel.getFeatures(plan.id);
-        data.plans[plan.id - 1]['features'] = planFeatures.features;
+        data.plans[i]['features'] = planFeatures.features;
     }
 
     res.status(data.code).json(data);

@@ -318,14 +318,28 @@ CREATE TABLE user_summarizations (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- User chats table
-CREATE TABLE user_chats (
+-- (Assignment) Chats table
+CREATE TABLE chats (
   id integer AUTO_INCREMENT,
+  user_id integer,
+  assignment_id integer,
+  documents_used varchar(5000),
+  created_at datetime,
+  saved bool,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- (Assignment) Chat messages table
+CREATE TABLE chat_messages (
+  id integer AUTO_INCREMENT,
+  chat_id integer,
   user_id integer,
   content varchar(2000),
   created_at datetime,
-  user_sent bool,
+  from_user bool,
   PRIMARY KEY (id),
+  FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
