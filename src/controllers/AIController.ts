@@ -34,6 +34,29 @@ AIController.post("/videos", async (req, res) => {
     return res.send({ code: 200, message: "Videos found", videos: videos.items });
 });
 
+
+/**
+ * POST /chat
+ * @summary Ask a new chat to the AI server
+ */
+AIController.post("/chat", async (req, res) => {
+    const { doc_paths, question } = req.body;
+    const aiBase = process.env.AI_BASE_URL;
+
+    // Validate the parameters
+    if(doc_paths === undefined || question === undefined) 
+        return res.send({ code: 400, message: "Missing parameters" });
+
+    console.log(doc_paths, question);
+    
+    // Make the request
+    axios.post(`${aiBase}/gpt`, { doc_paths, question }).then((result) => {
+        return res.send({ code: 200, message: "Chat created", response: result.data.data.answer });
+    }).catch((err) => {
+        return res.send({ code: 500, message: "Error creating chat", response: null });
+    });
+});
+
 // Type definitions
 type AIVideos = {
     title: string;

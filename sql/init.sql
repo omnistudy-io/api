@@ -321,6 +321,7 @@ CREATE TABLE user_summarizations (
 -- (Assignment) Chats table
 CREATE TABLE chats (
   id integer AUTO_INCREMENT,
+  title varchar(150),
   user_id integer,
   assignment_id integer,
   documents_used varchar(5000),
@@ -335,7 +336,7 @@ CREATE TABLE chat_messages (
   id integer AUTO_INCREMENT,
   chat_id integer,
   user_id integer,
-  content varchar(2000),
+  content varchar(5000),
   created_at datetime,
   from_user bool,
   PRIMARY KEY (id),
@@ -411,12 +412,12 @@ insert into exams values (null, 3, 'Final', 'Final exam', 'Smith Hall', 'Room 10
 insert into exams values (null, 4, 'Midterm', 'Midterm exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-05-08', '2024-05-08 08:00:00', '2024-05-08 09:00:00', 92.0, 100.0, 0.3);
 insert into exams values (null, 4, 'Final', 'Final exam', 'Tate Hall', 'Room 105', 'Seat 1', '2024-06-02', '2024-06-02 08:00:00', '2024-06-02 09:00:00', 92.0, 100.0, 0.3);
 -- Create some documents
-insert into documents values (null, 1, 1, 1, 1, '5802 Tech Talk.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/5802 Tech Talk.pdf', null, false);
-insert into documents values (null, 1, 1, 2, 2, 'Final Write Up.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Final Write Up.pdf', null, false);
-insert into documents values (null, 1, 2, 3, 4, 'INET 3102 Reflection 6.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/INET 3102 Reflection 6.pdf', null, false);
-insert into documents values (null, 1, 2, 5, 4, 'Lab 5 Group Work.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Lab 5 Group Work.pdf', null, false);
-insert into documents values (null, 1, 3, 6, 6, 'Note Apr 8, 2024.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Note Apr 8, 2024.pdf', null, false);
-insert into documents values (null, 1, 4, 9, 7, 'Summary Financial Projections - Financials (1).pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/1/documents/Summary Financial Projections - Financials (1).pdf', null, false);
+insert into documents values (null, 1, 1, 1, 1, '5802 Tech Talk.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/5802 Tech Talk.pdf', null, false);
+insert into documents values (null, 1, 1, 2, 2, 'Final Write Up.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/Final Write Up.pdf', null, false);
+insert into documents values (null, 1, 2, 3, 4, 'INET 3102 Reflection 6.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/INET 3102 Reflection 6.pdf', null, false);
+insert into documents values (null, 1, 2, 5, 4, 'Lab 5 Group Work.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/Lab 5 Group Work.pdf', null, false);
+insert into documents values (null, 1, 3, 6, 6, 'Note Apr 8, 2024.pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/Note Apr 8, 2024.pdf', null, false);
+insert into documents values (null, 1, 4, 9, 7, 'Summary Financial Projections - Financials (1).pdf', 'pdf', 'https://storage.googleapis.com/omnibucket-dev/users/231d4b52-0b2b-11ef-9ded-0242ac170002/documents/Summary Financial Projections - Financials (1).pdf', null, false);
 -- Create a study set
 insert into user_study_sets values (null, 1, 'Web Programming Questions', 'Study set for the Web Programming course', 10, NOW());
 insert into user_study_sets values (null, 1, 'Distributed Systems Questions', 'Study set for the Distributed Systems course', 10, NOW());

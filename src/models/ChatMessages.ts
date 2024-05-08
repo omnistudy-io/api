@@ -65,7 +65,7 @@ export default class ChatMessagesModel {
      */
     static async create(message: ChatMessageSchema) {
         const sql = `
-            INSERT INTO chat_messages (id, chat_id, user_id, content, created_at from_user)
+            INSERT INTO chat_messages (id, chat_id, user_id, content, created_at, from_user)
             VALUES (NULL, ${message.chat_id}, ${message.user_id}, "${message.content}", NOW(), ${message.from_user})
         `;
         const q: QueryResponse = await query(sql);
@@ -73,8 +73,8 @@ export default class ChatMessagesModel {
         if(q.result == null) 
             return { code: 500, message: q.message, chat_message: null };
         // Chat message created
-        const chat_message = this.getById(q.result.insertId);
-        return { code: 201, message: "Chat message created", chat_message: chat_message };
+        const chatMsgRes = await this.getById(q.result.insertId);
+        return { code: 201, message: "Chat message created", chat_message: chatMsgRes.chat_message };
 
     }
 

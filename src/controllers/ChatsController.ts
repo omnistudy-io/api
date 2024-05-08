@@ -56,10 +56,13 @@ ChatsController.get("/:id/messages", async (req, res) => {
  * @returns code: number, message: string, chat: UserChatSchema
  */
 ChatsController.post("/", async (req, res) => {
-    const { user_id, assignment_id, documents_used, created_at, saved } = req.body;
+    const { user_id, title, assignment_id, documents_used, created_at, saved } = req.body;
     // Verify required fields exist
-    if(user_id == null || assignment_id == null || documents_used == null || created_at == null || saved == null)
+    if(user_id == null || title == null || assignment_id == null || documents_used == null || created_at == null || saved == null)
         return res.status(400).json({ code: 400, message: 'Missing required fields. Required: user_id, assignment_id, documents_used, created_at, saved', chat: null });
+    // Verify the title is not empty
+    if(title == '')
+        return res.status(400).json({ code: 400, message: 'Title is empty', chat: null });
     // Verify the user_id is a number
     if(isNaN(user_id)) 
         return res.status(400).json({ code: 400, message: 'Invalid user ID', chat: null });
@@ -94,14 +97,14 @@ ChatsController.put("/:id", async (req, res) => {
     }
 
     // Allowed fields
-    const updatableFields = ["assignment_id", "documents_used", "created_at", "saved"];
+    const updatableFields = ["title", "assignment_id", "documents_used", "created_at", "saved"];
     if(Object.keys(req.body).some(key => !updatableFields.includes(key))) {
-        res.status(400).json({ code: 400, message: 'Invalid field in request', assignment: null });
+        res.status(400).json({ code: 400, message: 'Invalid field in request', chat: null });
         return;
     }
     // Check that any field exists
     if(Object.keys(req.body).length == 0) {
-        res.status(400).json({ code: 400, message: 'No fields provided', assignment: null });
+        res.status(400).json({ code: 400, message: 'No fields provided', chat: null });
         return;
     }
 

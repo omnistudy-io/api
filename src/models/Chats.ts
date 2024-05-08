@@ -1,5 +1,6 @@
 import { query, QueryResponse } from "../db";
-import { ChatSchema } from "../schema";
+import { ChatSchema, DocumentSchema } from "../schema";
+import { DocumentsModel } from "./Documents";
 
 /**
  * Model for the `chats` table in the DB.
@@ -48,7 +49,12 @@ export default class ChatsModel {
         message: string,
         chats: ChatSchema[] | null
     }> {
-        const sql = `SELECT * FROM chats WHERE assignment_id = ${assignmentId} AND saved = 1`;
+        const sql = `
+            SELECT c.*, d.title as documentTitle
+            FROM chats c, documents d
+            WHERE c.assignment_id = ${assignmentId} 
+                AND c.saved = 1 AND c.documents_used = d.id
+        `;
         const q: QueryResponse = await query(sql);
         // Query or connection error
         if(q.result == null) 
@@ -70,18 +76,20 @@ export default class ChatsModel {
     static async create(chat: ChatSchema): Promise<{
         code: number,
         message: string,
-        chat: ChatSchema | null
+        chat: (ChatSchema & { documentTitle: string }) | null
     }> {
         const sql = `
-            INSERT INTO chats (user_id, assignment_id, documents_used, created_at, saved) 
-            VALUES (${chat.user_id}, ${chat.assignment_id}, '${chat.documents_used}', '${chat.created_at}', ${chat.saved})
+            INSERT INTO chats (user_id, title, assignment_id, documents_used, created_at, saved) 
+            VALUES (${chat.user_id}, '${chat.title}', ${chat.assignment_id}, '${chat.documents_used}', '${chat.created_at}', ${chat.saved})
         `;
         const q: QueryResponse = await query(sql);
         // Query or connection error
         if(q.result == null) 
             return { code: 500, message: q.message, chat: null };
         // Chat created
-        return { code: 200, message: "Chat created", chat: chat };
+        const chatRes = await this.getById(q.result.insertId);
+        const document: DocumentSchema = (await DocumentsModel.getById(parseInt(chat.documents_used))).doc;
+        return { code: 200, message: "Chat created", chat: { ...chatRes.chat, documentTitle: document.title } };
     }
 
 
