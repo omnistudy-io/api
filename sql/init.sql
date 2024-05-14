@@ -324,11 +324,13 @@ CREATE TABLE chats (
   title varchar(150),
   user_id integer,
   assignment_id integer,
-  documents_used varchar(5000),
+  document_id integer,
   created_at datetime,
   saved bool,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
+  FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE SET NULL
 );
 
 -- (Assignment) Chat messages table

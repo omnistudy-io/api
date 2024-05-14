@@ -64,9 +64,11 @@ export default class ChatMessagesModel {
      * @param message contains fields: chat_id, user_id, content, from_user
      */
     static async create(message: ChatMessageSchema) {
+        const content = message.content.replace(/"/g, '"').replace(/'/g, '"');
+        console.log(content);
         const sql = `
             INSERT INTO chat_messages (id, chat_id, user_id, content, created_at, from_user)
-            VALUES (NULL, ${message.chat_id}, ${message.user_id}, "${message.content}", NOW(), ${message.from_user})
+            VALUES (NULL, ${message.chat_id}, ${message.user_id}, '${content}', NOW(), ${message.from_user})
         `;
         const q: QueryResponse = await query(sql);
         // Query or connection error
