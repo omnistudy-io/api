@@ -303,6 +303,7 @@ CREATE TABLE user_study_set_questions (
   type varchar(7),
   question varchar(500),
   answer varchar(100),
+  options varchar(2000),
   PRIMARY KEY (id),
   FOREIGN KEY (study_set_id) REFERENCES user_study_sets(id) ON DELETE CASCADE
 );

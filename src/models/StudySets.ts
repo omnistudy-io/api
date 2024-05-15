@@ -70,9 +70,9 @@ export default class StudySetsModel {
         const studySetId = res.result.insertId;
         ssq.forEach(async (q: UserStudySetQuestionSchema) => {
             const sql = `INSERT INTO user_study_set_questions (
-                study_set_id, type, question, answer
+                study_set_id, type, question, answer, options
             ) VALUES (
-                ${studySetId}, '${q.type}', '${q.question}', '${q.answer}'
+                ${studySetId}, '${q.type}', '${q.question}', '${q.answer}', ${q.options ? `'${JSON.stringify(q.options)}'` : `NULL`}
             )`;
             console.log(sql);
             const qRes = await query(sql);
