@@ -3,6 +3,7 @@ import { UsersModel } from '../models/Users';
 import { AuthModel } from '../models/Auth';
 import { ApiResponse } from '../response';
 import { genSalt, hash } from "bcrypt";
+import { QueryResponse, query } from '../db';
 
 import { UserPlansModel } from '../models/UserPlans';
 import { UserProfilesModel } from '../models/UserProfiles';
@@ -369,6 +370,82 @@ UsersController.get("/:id/documents", async (req, res) => {
 
     const response = await DocumentsModel.getByUserId(id);
     res.status(response.code).json(response);
+});
+
+
+/**
+ * GET /:id/cmtoday
+ * @summary Get the number of chat messages sent today by a user
+ * @param id The user id
+ * @returns code: number, message: string, count: number
+ */
+UsersController.get("/:id/cmtoday", async (req, res) => {
+    // Verify the requested user is getting their own data
+    if(req.user.id != req.params.id) {
+        res.status(403).json({ code: 403, message: 'Unauthorized', count: 0 });
+        return;
+    }
+
+    const id = req.params.id;
+    // Validate the id parameter
+    if(isNaN(id)) {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', count: 0 });
+        return;
+    }
+
+    // Prepare and execute the SQL query
+    const sql = `
+        SELECT COUNT(*) as count
+        FROM users u, chat_messages cm
+        WHERE u.id=${id} AND u.id=cm.user_id AND cm.from_user=1 AND DATE(cm.created_at) = CURDATE()
+    `;
+    const response: QueryResponse = await query(sql);
+
+    // Query or connection error
+    if(response.result == null) {
+        res.status(500).json({ code: 500, message: 'Failed to query database', count: 0 });
+        return;
+    }
+    // Success
+    res.status(200).json({ code: 200, message: 'Messages found', count: response.result[0].count });
+});
+
+
+/**
+ * GET /:id/qgtoday
+ * @summary Get the number of question sets generated today by a user
+ * @param id The user id
+ * @returns code: number, message: string, count: number
+ */
+UsersController.get("/:id/sstoday", async (req, res) => {
+    // Verify the requested user is getting their own data
+    if(req.user.id != req.params.id) {
+        res.status(403).json({ code: 403, message: 'Unauthorized', count: 0 });
+        return;
+    }
+
+    const id = req.params.id;
+    // Validate the id parameter
+    if(isNaN(id)) {
+        res.status(400).json({ code: 400, message: 'Invalid id parameter', count: 0 });
+        return;
+    }
+
+    // Prepare and execute the SQL query
+    const sql = `
+        SELECT COUNT(*) as count
+        FROM users u, user_study_sets uss
+        WHERE u.id=${id} AND u.id=uss.user_id AND uss.created_by_ai=1 AND DATE(uss.created_at) = CURDATE()
+    `;
+    const response: QueryResponse = await query(sql);
+
+    // Query or connection error
+    if(response.result == null) {
+        res.status(500).json({ code: 500, message: 'Failed to query database', count: 0 });
+        return;
+    }
+    // Success
+    res.status(200).json({ code: 200, message: 'Study sets found', count: response.result[0].count });
 });
 
 

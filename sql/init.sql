@@ -292,6 +292,7 @@ CREATE TABLE user_study_sets (
   description varchar(500),
   num_questions integer,
   created_at datetime,
+  created_by_ai boolean,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

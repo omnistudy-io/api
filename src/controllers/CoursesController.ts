@@ -91,14 +91,13 @@ CoursesController.delete("/:id", async (req, res) => {
  */
 CoursesController.put("/:id", async (req, res) => {
     const courseId = req.params.id;
-    const course = req.body;
 
     // Validate parameters
     if(isNaN(courseId) || courseId < 0 || courseId == null || courseId == undefined)
         return res.status(400).json({ code: 400, message: 'Invalid Course ID', course: null });
 
     // Allowed fields
-    const updatableFields = ["course_id", "title", "description", "progress", "due_at", "actual_points", "possible_points", "weight"];
+    const updatableFields = ["title", "description", "subject", "number", "professor", "building", "room", "color", "thumbnail_url"]
     if(Object.keys(req.body).some(key => !updatableFields.includes(key))) {
         res.status(400).json({ code: 400, message: 'Invalid field in request', assignment: null });
         return;
@@ -109,7 +108,7 @@ CoursesController.put("/:id", async (req, res) => {
         return;
     }
 
-    const result = await CoursesModel.update(req.params.id, req.body.color);
+    const result = await CoursesModel.update(req.params.id, req.body);
     res.status(result.code).send(result);
 });
 

@@ -40,7 +40,7 @@ export class CourseEventsModel {
         course_events: CourseEventSchema[] 
     }> 
     {
-        const sql = `SELECT * FROM course_events WHERE course_id=${courseId}`;
+        const sql = `SELECT * FROM course_events WHERE course_id=${courseId} LIMIT 5`;
         let res = await query(sql);
         if(res.result == null)
             return { code: 500, message: res.message, course_events: [] };
