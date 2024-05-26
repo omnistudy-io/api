@@ -34,7 +34,7 @@ export class AuthModel {
         if(decoded) {
             let verified = false;
             try {
-                verified = verify(token, 'testing');
+                verified = verify(token, process.env.JWT_SECRET || "testing");
             } catch(e) {}
             // Token exists and is verified
             if(verified) {

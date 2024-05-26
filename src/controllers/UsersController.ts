@@ -16,6 +16,7 @@ import { DocumentsModel } from '../models/Documents';
 // Create the controller
 const UsersController = require('express')();
 
+
 /**
  * POST /
  * @summary Create a new user
@@ -64,6 +65,7 @@ UsersController.get("/", async (req, res) => {
     res.status(response.code).json(response);
 });
 
+
 /**
  * GET /current
  * @summary Get the current user
@@ -103,6 +105,7 @@ UsersController.get('/username/:username', async (req, res) => {
     res.status(response.code).json(response);
 });
 
+
 /**
  * DELETE /:id
  * @summary Delete a user by id
@@ -121,6 +124,7 @@ UsersController.delete('/:id', async (req, res) => {
     const response = await UsersModel.delete(req.params.id);
     res.status(response.code).json(response);
 });
+
 
 /**
  * PUT /:id
@@ -154,6 +158,7 @@ UsersController.put('/:id', async (req, res) => {
     const response = await UsersModel.update(req.params.id, req.body);
     res.status(response.code).json(response);
 });
+
 
 /**
  * PUT /:id/password
@@ -189,6 +194,7 @@ UsersController.put('/:id/password', async (req, res) => {
     const response = await UsersModel.update(req.params.id, { password: hash });
     res.status(response.code).json(response);
 }); 
+
 
 /**
  * GET /:id/profile

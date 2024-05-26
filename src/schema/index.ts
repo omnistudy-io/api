@@ -21,3 +21,4 @@ export { UserStudySetQuestionSchema, UserStudySetQuestionsRows } from './user_st
 export { UserStudySetSchema, UserStudySetsRows } from './user_study_sets';
 export { UserSummarizationSchema, UserSummarizationsRows } from './user_summarizations';
 export { UserSchema, UsersRows } from './users';
+import { InviteSchema, InvitesRows } from './invites';

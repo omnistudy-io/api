@@ -27,6 +27,20 @@ CREATE TABLE users (
   UNIQUE (email)
 );
 
+-- Invites table
+CREATE TABLE invites (
+  id integer AUTO_INCREMENT,
+  first_name varchar(150),
+  last_name varchar(150),
+  email varchar(100),
+  username varchar(150),
+  code varchar(100),
+  created_at datetime NOT NULL DEFAULT NOW(),
+  accepted_at datetime,
+  accepted bool,
+  PRIMARY KEY (id)
+);
+
 -- Plans table
 CREATE TABLE plans (
   id integer,
@@ -47,7 +61,7 @@ CREATE TABLE plan_features (
     plan_id integer,
     description varchar(150),
     tag varchar(50),
-    included boolean,
+    included bool,
     PRIMARY KEY (id),
     FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE
 );
@@ -292,7 +306,7 @@ CREATE TABLE user_study_sets (
   description varchar(500),
   num_questions integer,
   created_at datetime,
-  created_by_ai boolean,
+  created_by_ai bool,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

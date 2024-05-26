@@ -11,6 +11,7 @@ import AIController from "./AIController";
 import PaymentsController from "./PaymentsController";
 import ChatsController from "./ChatsController";
 import ChatMessagesController from "./ChatMessagesController";
+import InvitesController from "./InvitesController";
 
 // Middleware
 import auth, { uidReplace } from "../auth";
@@ -20,6 +21,7 @@ const Controller = require('express')();
 
 // Register unprotected sub-controllers
 Controller.use('/auth', AuthController);
+Controller.use('/invites', InvitesController);
 
 // Register protected sub-controllers
 Controller.use('/users', [auth, uidReplace], UsersController);

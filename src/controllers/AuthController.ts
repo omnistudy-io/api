@@ -12,7 +12,6 @@ const AuthController = require('express')();
 AuthController.post("/login", async (req, res) => {
     // Parse the request body
     const { email, password } = req.body;
-    console.log(email, password);
 
     // Execute query and get results
     const qr: QueryResponse = await query(`SELECT * FROM users WHERE email = '${email}' or username = '${email}'`);
@@ -26,14 +25,13 @@ AuthController.post("/login", async (req, res) => {
 
     // Compare the password with the hash
     const result = await compare(password, passwordHash);
-    console.log(result);
     // Send response
     if(result) {
         // Create a token
         const data = {
             ...user, password: undefined
         }
-        const token = jwtSign(data, 'testing');
+        const token = jwtSign(data, process.env.JWT_SECRET || "testing");
         res.status(200).json(ApiResponse([token], "Login successful", qr.message, 200));
     }
     else {
@@ -45,6 +43,11 @@ AuthController.post("/login", async (req, res) => {
 AuthController.post("/register", async (req, res) => {
     // Parse the request body
     const { firstName, lastName, email, username, password } = req.body;
+
+    // Generate a salt for the password
+    const hash = await AuthModel.hashPassword(password, 10);
+    if(hash === null) 
+        res.status(500).json(ApiResponse([], 'Failed to hash password', 'Internal server error', 500));
 
     // Check if username or email already exists
     const emailExists = await UsersModel.existsWithEmail(email);
@@ -58,10 +61,6 @@ AuthController.post("/register", async (req, res) => {
         return;
     }
 
-    // Generate a salt for the password
-    const hash = await AuthModel.hashPassword(password, 10);
-    if(hash === null) 
-        res.status(500).json(ApiResponse([], 'Failed to hash password', 'Internal server error', 500));
     // Create the user and send the response
     const response = await UsersModel.create(firstName, lastName, email, username, hash);
     const user: UserSchema = response.rows[0];
@@ -76,7 +75,7 @@ AuthController.post("/register", async (req, res) => {
         name: `${firstName} ${lastName}`,
         api_key: user.api_key
     }
-    const token = jwtSign(data, 'testing');
+    const token = jwtSign(data, process.env.JWT_SECRET || "testing");
     res.status(200).json(ApiResponse([token], "Register successful", response.message, 200));
 });
 

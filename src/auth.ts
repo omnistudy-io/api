@@ -24,20 +24,21 @@ export default async function auth(req, res, next) {
     // Check for the authorization header
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     if(authHeader === undefined || authHeader === null) {
-        return res.status(401).json({ code: 401, message: "Invalid authentication" });
+        return res.status(401).json({ code: 401, message: "Invalid authentication, step 1" });
     }
     
     // Decode the token
     const token = authHeader.replace("Bearer ", "");
     const decoded = await AuthModel.decodeToken(token);
+    console.log(decoded);
     if(!decoded.data) {
-        return res.status(401).json({ code: 401, message: "Invalid authentication" });
+        return res.status(401).json({ code: 401, message: "Invalid authentication, step 2" });
     }
     else {
         // Validate the user against the db
         const valid = await AuthModel.validateUser(decoded.data.id, decoded.data.api_key);
         if(!valid) {
-            return res.status(401).json({ code: 401, message: "Invalid authentication" });
+            return res.status(401).json({ code: 401, message: "Invalid authentication, step 3" });
         }
         else {
             req.user = decoded.data;
