@@ -12,6 +12,7 @@ import PaymentsController from "./PaymentsController";
 import ChatsController from "./ChatsController";
 import ChatMessagesController from "./ChatMessagesController";
 import InvitesController from "./InvitesController";
+import EmailController from "./EmailController";
 
 // Middleware
 import auth, { uidReplace } from "../auth";
@@ -35,6 +36,7 @@ Controller.use('/ai', [auth, uidReplace], AIController);
 Controller.use('/payments', [auth, uidReplace], PaymentsController);
 Controller.use('/chats', [auth, uidReplace], ChatsController);
 Controller.use('/chat-messages', [auth, uidReplace], ChatMessagesController);
+Controller.use('/email', [auth, uidReplace], EmailController);
 
 // Unprotected controller functionality
 Controller.get("/", (req, res) => {
