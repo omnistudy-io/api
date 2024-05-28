@@ -87,7 +87,9 @@ AIController.post("/qgen", async (req, res) => {
 
     // Make the request
     axios.post(`${aiBase}/qgen`, { doc_paths, num_questions, question_types }).then((result) => {
-        return res.send({ code: 200, message: "Questions generated", questions: result.data.data.answer });
+        console.log(result);
+        console.log(result.data.data.answer);
+        return res.send({ code: 200, message: "Questions generated", questions: result.data.data });
     }).catch((err) => {
         return res.send({ code: 500, message: "Error generating questions", questions: [] });
     });
