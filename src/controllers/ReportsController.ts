@@ -21,7 +21,7 @@ ReportsController.get("/chat-messages", async (req, res) => {
         SELECT Last5Days.day, COALESCE(COUNT(chat_messages.created_at), 0) AS count
         FROM Last5Days
         LEFT JOIN chat_messages
-        ON DATE(chat_messages.created_at) = Last5Days.day AND from_user=1
+        ON DATE(chat_messages.created_at) = Last5Days.day AND from_user=1 AND user_id=${req.user.id}
         GROUP BY Last5Days.day
         ORDER BY Last5Days.day;
     `;
