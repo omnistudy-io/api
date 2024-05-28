@@ -53,7 +53,7 @@ export class InvitesModel {
         // Prepare and execute sql
         const sql = `
             UPDATE invites
-            SET accepted=true, accepted_at=NOW()
+            SET accepted=true, accepted_at=NOW() - INTERVAL 5 hour
             WHERE code='${code}'
         `;
         const qr = await query(sql);

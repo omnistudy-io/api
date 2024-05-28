@@ -5,7 +5,7 @@ export default class Storage {
     // Create a new storage instance
     private static storage = new GCStorage({
         projectId: process.env.PROJECT_ID,
-        keyFilename: "src/serviceKey.json"
+        // keyFilename: "src/serviceKey.json"
     });
 
     // Get the storage bucket

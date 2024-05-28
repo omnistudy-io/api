@@ -61,7 +61,7 @@ export default class StudySetsModel {
         const sql = `INSERT INTO user_study_sets (
             user_id, title, description, num_questions, created_at
         ) VALUES (
-            ${ss.user_id}, '${ss.title}', '${ss.description}', ${ssq.length}, NOW()
+            ${ss.user_id}, '${ss.title}', '${ss.description}', ${ssq.length}, NOW() - INTERVAL 5 hour
         )`;
         let res = await query(sql);
         if(res.result == null)

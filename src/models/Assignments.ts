@@ -89,7 +89,7 @@ export class AssignmentsModel {
         const sql = `INSERT INTO assignments (
             course_id, title, description, progress, created_at, due_at
         ) VALUES (
-            '${a.course_id}', '${a.title}', '${a.description}', 0, NOW(), '${a.due_at}'
+            '${a.course_id}', '${a.title}', '${a.description}', 0, NOW() - INTERVAL 5 hour, '${a.due_at}'
         )`;
         let res = await query(sql);
         // Query or connection error

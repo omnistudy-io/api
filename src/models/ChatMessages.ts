@@ -68,7 +68,7 @@ export default class ChatMessagesModel {
         console.log(content);
         const sql = `
             INSERT INTO chat_messages (id, chat_id, user_id, content, created_at, from_user)
-            VALUES (NULL, ${message.chat_id}, ${message.user_id}, '${content}', NOW(), ${message.from_user})
+            VALUES (NULL, ${message.chat_id}, ${message.user_id}, '${content}', NOW() - INTERVAL 5 hour, ${message.from_user})
         `;
         const q: QueryResponse = await query(sql);
         // Query or connection error
